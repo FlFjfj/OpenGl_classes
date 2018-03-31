@@ -15,10 +15,9 @@ using namespace fjfj;
 
 class Player {
 
-    float u, v;
-
     Mesh* mesh;
     Texture* tex;
+
     GLuint model_location;
 
     PlayerController *controller;

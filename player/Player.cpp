@@ -7,7 +7,7 @@
 #include "Player.h"
 
 Player::Player(PlayerController *controller, GLuint model_location) :
-        u(0), v(0), controller(controller), model_location(model_location) {
+        controller(controller), model_location(model_location) {
     mesh = MeshLoader::LoadMesh("models/player.obj");
     tex = new Texture("texture/player.png");
 }

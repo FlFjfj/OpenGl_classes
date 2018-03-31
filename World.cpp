@@ -20,7 +20,7 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
 }
 
 void World::update(float delta) {
-    
+
 }
 
 void World::render() {

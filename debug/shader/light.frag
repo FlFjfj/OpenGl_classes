@@ -7,9 +7,15 @@ in vec3 v_WorldCoord;
 
 out vec4 frag_color;
 
-vec3 light_pos = vec3(0.0, 0.0, 1.0);
+vec3 light_pos = vec3(0.0, 0.0, -100.0);
 
 void main() {
-    light_power = abs(dot(texture2D(texture0, v_TexCoord + veec2(0.5, 0)), v_WorldCoord - light_pos)) * 0.7;
-    frag_color = texture2D(texture0, v_TexCoord) * (light_power + 0.3);
+    float light_power = abs(
+                            dot(
+                                normalize(2 * texture2D(texture0, vec2(v_TexCoord.x + 0.5, v_TexCoord.y)).xyz - vec3(1.0)),
+                                normalize(light_pos - v_WorldCoord)
+                                )
+                            ) * 0.7;
+    frag_color = texture2D(texture0, v_TexCoord) * (0.3 + light_power);
+
 }

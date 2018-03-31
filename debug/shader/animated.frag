@@ -27,7 +27,9 @@ void main() {
                                 normalize(light_pos - v_WorldCoord)
                                 )
                             ) * 0.5;
-    frag_color = mix(texture2D(texture0, vec2(v_TexCoord.x, v_TexCoord.y + v_Frame / float(u_FrameCount))),
-                     texture2D(texture0, vec2(v_TexCoord.x, v_TexCoord.y + (v_Frame + 1) % u_FrameCount / float(u_FrameCount))),
-                     v_Trans) * (0.5 + light_power);
+    vec4 color1 = texture2D(texture0, vec2(v_TexCoord.x, v_TexCoord.y + v_Frame / float(u_FrameCount)));
+    vec4 color2 = texture2D(texture0, vec2(v_TexCoord.x, v_TexCoord.y + (v_Frame + 1) % u_FrameCount / float(u_FrameCount)));
+    vec4 color = mix(color1, color2, v_Trans);
+
+    frag_color = vec4((color * (0.5 + light_power)).xyz, color.a);
 }

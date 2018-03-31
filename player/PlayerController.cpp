@@ -19,10 +19,8 @@ void PlayerController::mouseClickHandler(GLFWwindow *window, int button, int act
     glfwGetWindowSize(window, &w, &h);
     glm::vec2 mousecoords = glm::vec2(pos[0]/w, pos[1]/h);
     mousecoords = 2.0f*mousecoords - glm::vec2(1,1);
-    mousecoords = glm::normalize(mousecoords);
-    std::cout << "X " << mousecoords.x << " Y " << mousecoords.y << std::endl;
     e.data.delta[0] = mousecoords.x;
-    e.data.delta[1] = mousecoords.y;
+    e.data.delta[1] = -mousecoords.y;
     switch (button) {
         case GLFW_MOUSE_BUTTON_LEFT:
             if (action == GLFW_RELEASE) {

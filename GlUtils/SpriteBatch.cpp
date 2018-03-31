@@ -36,14 +36,37 @@ namespace fjfj {
 
     }
 
-    void SpriteBatch::draw(const Texture &tex, GLint model_location, float x, float y, float width, float height, float angle) {
+    void SpriteBatch::draw(const Texture &tex, GLint model_location, glm::vec2 coords, float width, float height) {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
         glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
-                glm::rotate(glm::scale(glm::translate(glm::mat4(), glm::vec3(x, y, 0)), glm::vec3(width, height, 1)), angle, glm::vec3(0,0,1))));
+                glm::scale(glm::translate(glm::mat4(), glm::vec3(coords, 0)), glm::vec3(width, height, 1))));
 
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
 
     }
+
+    void SpriteBatch::draw(const Texture &tex, GLint model_location, float x, float y, float width, float height, float angle) {
+
+        glBindTexture(GL_TEXTURE_2D, tex.texture);
+        glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
+                glm::scale(glm::rotate(glm::translate(glm::mat4(), glm::vec3(x, y, 0)), angle, glm::vec3(0,0,1)), glm::vec3(width, height, 1))));
+
+        this->square->draw();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+    }
+
+    void SpriteBatch::draw(const Texture &tex, GLint model_location, glm::vec2 coords, float width, float height, float angle) {
+
+        glBindTexture(GL_TEXTURE_2D, tex.texture);
+        glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
+                glm::scale(glm::rotate(glm::translate(glm::mat4(), glm::vec3(coords, 0)), angle, glm::vec3(0,0,1)), glm::vec3(width, height, 1))));
+
+        this->square->draw();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+    }
+
 }

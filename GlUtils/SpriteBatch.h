@@ -7,7 +7,7 @@
 
 #include "Texture.h"
 #include "Mesh.h"
-
+#include <glm/vec2.hpp>
 namespace fjfj {
 
     class SpriteBatch {
@@ -18,6 +18,8 @@ namespace fjfj {
         SpriteBatch();
         void draw(const Texture& tex, GLint model_location, float x, float y, float width, float height);
         void draw(const Texture& tex, GLint model_location, float x, float y, float width, float height, float angle);
+        void draw(const Texture &tex, GLint model_location, glm::vec2 coords, float width, float height);
+        void draw(const Texture &tex, GLint model_location, glm::vec2 coords, float width, float height, float angle);
 
     };
 

@@ -25,6 +25,11 @@ namespace fjfj {
 
         void update();
 
+        float getWidth();
+
+        float getHeight();
+
+        glm::vec2 getPosition();
     };
 
 }

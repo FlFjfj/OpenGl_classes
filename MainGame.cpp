@@ -9,16 +9,14 @@
 #include "GlUtils/OrthographicCamera.h"
 #include "GlUtils/Shader.h"
 #include "GlUtils/SpriteBatch.h"
+#include "World.h"
 
 namespace fjfj {
 
     SpriteBatch *batch;
     OrthographicCamera *cam;
-    Shader *shader;
-    Texture *tex;
 
-    GLint model_loc;
-    GLint proj_loc;
+    World* world;
 
     const int WORLD_WIDTH = 800;
     const int WORLD_HEIGHT = 600;
@@ -33,11 +31,8 @@ namespace fjfj {
 
         batch = new SpriteBatch();
         cam = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-        tex = new Texture("texture/octo.jpeg");
 
-        shader = new Shader("shader/simple.vert", "shader/simple.frag");
-        model_loc = glGetUniformLocation(shader->Program, "u_ModelTrans");
-        proj_loc = glGetUniformLocation(shader->Program, "u_ProjTrans");
+        world = new World(batch, cam);
     }
 
     void MainGame::update(float delta) {
@@ -45,15 +40,9 @@ namespace fjfj {
     }
 
     void MainGame::render() {
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader->Use();
-
-        glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
-        batch->draw(*tex, model_loc, 4, 0, 100, 100);
-
-        glUseProgram(0);
+        world->render();
     }
 
 }

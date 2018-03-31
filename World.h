@@ -7,30 +7,37 @@
 
 #include "GlUtils/Mesh.h"
 #include "GlUtils/Texture.h"
-#include "GlUtils/Camera.h"
+#include "GlUtils/OrthographicCamera.h"
+#include "GlUtils/SpriteBatch.h"
+#include "GlUtils/Shader.h"
 
 #include <glm/glm.hpp>
 
 using fjfj::Mesh;
 using fjfj::Texture;
-using fjfj::Camera;
+using fjfj::Shader;
+using fjfj::OrthographicCamera;
+using fjfj::SpriteBatch;
 
 class World {
 
-    Mesh *torus;
-    Texture *texture;
+    const int WORLD_SIZE = 50;
+    const int PART_SIZE = 50;
 
-    float r, R;
-    float u, v;
+    OrthographicCamera *cam;
+    SpriteBatch *batch;
 
-    float yaw;
-    float pitch;
+    Shader back_shader;
+    Texture background;
+    GLint proj_loc;
+    GLint model_loc;
 
 public:
-    World(float r, float R);
+    World(SpriteBatch *batch, OrthographicCamera *cam);
 
-    void update(float delta, Camera* camera);
-    void draw();
+    void update(float delta);
+
+    void render();
 };
 
 

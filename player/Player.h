@@ -22,10 +22,11 @@ enum TentacleState {
 
 class Player {
     const static uint32_t NTENTACLES = 8;
+    const static uint32_t TENTACLE_OFFSET=30;
     const static uint32_t HEAD_WIDTH = 100;
     const static uint32_t HEAD_HEIGHT = 100;
-    const static uint32_t TENTACLE_WIDTH = 150;
-    const static uint32_t TENTACLE_HEIGHT = 150;
+    const static uint32_t TENTACLE_WIDTH = 100;
+    const static uint32_t TENTACLE_HEIGHT = 100;
 
     Texture *head;
     Texture *tentacle;
@@ -35,11 +36,13 @@ class Player {
     PlayerController *controller;
     SpriteBatch *batch;
     TentacleState tentacles[NTENTACLES];
+    float tentacleAngle[NTENTACLES];
     OrthographicCamera *cam;
 
     glm::vec2 coords;
     glm::vec2 tentacleOffsets[NTENTACLES];
-    glm::vec2 speed;
+    glm::vec2 vertical_speed;
+    glm::vec2 horizontal_speed;
 
 
 public:

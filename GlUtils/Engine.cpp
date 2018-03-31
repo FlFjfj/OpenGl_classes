@@ -11,13 +11,11 @@
 #include <iostream>
 #include <chrono>
 
-extern std::queue<SDL_Event> KeyBoardController::events_t;
-
 namespace fjfj {
 
     auto LAST = std::chrono::system_clock::now();
 
-    Engine::Engine(void (*init)(void), void (*update)(float), void (*render)(void)) :
+    Engine::Engine(void (*init)(GLFWwindow*), void (*update)(float), void (*render)(void)) :
             init(init), update(update), render(render) {}
 
     void Engine::start() {
@@ -44,7 +42,7 @@ namespace fjfj {
             std::cout<<"glewInit failed, aborting."<<std::endl;
         }
 
-        this->init();
+        this->init(window);
 
         while(!glfwWindowShouldClose(window)){
             auto NOW = std::chrono::system_clock::now();

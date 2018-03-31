@@ -6,13 +6,14 @@
 #define GLUTGL_PLAYERCONTROLLER_H
 
 
+#include <GLFW/glfw3.h>
 #include <queue>
 
-enum EventType{
-    KeyDown, KeyUp, MouseMove, Empty
+enum EventType {
+    KeyDown, KeyUp, MouseMove, M_RELEASE_LEFT, M_RELEASE_RIGHT
 };
 
-enum EventKey{
+enum EventKey {
     UP, DOWN, LEFT, RIGHT, MOUSE
 };
 
@@ -24,17 +25,31 @@ typedef union {
 struct Event {
     EventType type;
     EventData data;
-
 };
 
 class PlayerController {
 
 protected:
-    std::queue<Event> events;
+    static std::queue<Event> qclicks;
+    GLFWwindow *window;
 
 public:
-    virtual Event getEvent() = 0;
-    virtual void update() = 0;
+
+    PlayerController(GLFWwindow *window);
+
+    static void mouseClickHandler(GLFWwindow *window, int button, int action, int mods);
+
+    Event getEvent();
+
+    bool hasEvent();
+
+    bool moveTop();
+
+    bool moveRight();
+
+    bool moveLeft();
+
+    bool moveBottom();
 };
 
 

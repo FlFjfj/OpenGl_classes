@@ -17,6 +17,7 @@ namespace fjfj {
     public:
         SpriteBatch();
         void draw(const Texture& tex, GLint model_location, float x, float y, float width, float height);
+        void draw(const Texture& tex, GLint model_location, float x, float y, float width, float height, float angle);
 
     };
 

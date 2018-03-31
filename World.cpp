@@ -10,7 +10,6 @@
 
 #include <iostream>
 
-#include <SDL2/SDL.h>
 #include "GlUtils/MeshLoader.h"
 
 World::World(float r, float R): u(0), v(0), r(r), R(R), pitch(0), yaw(0){
@@ -20,7 +19,7 @@ World::World(float r, float R): u(0), v(0), r(r), R(R), pitch(0), yaw(0){
 
 
 void World::update(float delta, Camera* camera){
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    /*const Uint8 *state = SDL_GetKeyboardState(NULL);
 
     float dv = 1;
     float du = r / (R  + r * glm::cos(v)) * dv ;
@@ -50,7 +49,7 @@ void World::update(float delta, Camera* camera){
     //if(state[SDL_SCANCODE_A])
     yaw += (mx - 300) / 500.0f;
     pitch -= (my - 300) / 500.0f;
-    pitch = glm::clamp(pitch, -1.57f, 1.57f);
+    pitch = glm::clamp(pitch, -1.57f, 1.57f);*/
     /*if(state[SDL_SCANCODE_D])
         yaw += delta;
     if(state[SDL_SCANCODE_S])

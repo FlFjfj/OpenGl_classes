@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.6)
 project(GlutGl)
 
 find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
+find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCE_FILES player/Player.cpp player/Player.h player/PlayerController.h
         player/KeyBoardController.cpp player/KeyBoardController.h
@@ -16,5 +16,4 @@ set(SOURCE_FILES player/Player.cpp player/Player.h player/PlayerController.h
         World.cpp World.h)
 add_executable(debug ${SOURCE_FILES})
 
-target_link_libraries(debug ${GLEW_LIBRARIES} ${OPENGL_gl_LIBRARY}
-        ${SDL2_LIBRARIES} -lSOIL)
+target_link_libraries(debug ${GLEW_LIBRARIES} ${OPENGL_gl_LIBRARY} glfw -lSOIL)

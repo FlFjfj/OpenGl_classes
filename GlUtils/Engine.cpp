@@ -2,63 +2,66 @@
 // Created by opot on 19.04.17.
 //
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "Engine.h"
 #include "../player/KeyBoardController.h"
 
-#include <GL/glew.h>
-#include <SDL2/SDL.h>
+#include <iostream>
+#include <chrono>
 
 extern std::queue<SDL_Event> KeyBoardController::events_t;
 
 namespace fjfj {
 
-    Uint64 LAST = 0;
+    auto LAST = std::chrono::system_clock::now();
 
     Engine::Engine(void (*init)(void), void (*update)(float), void (*render)(void)) :
             init(init), update(update), render(render) {}
 
     void Engine::start() {
-        SDL_Window *window;
-        SDL_GLContext context;
+        GLFWwindow* window;
 
-        SDL_Init(SDL_INIT_VIDEO);
+        if (!glfwInit()) {
+            exit(EXIT_FAILURE);
+        }
 
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
+        window = glfwCreateWindow(1366, 768, "Simple example", NULL, NULL);
 
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+        if (!window)
+        {
+            glfwTerminate();
+            exit(EXIT_FAILURE);
+        }
 
-        window = SDL_CreateWindow("OpenGl", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1366, 768,
-                                  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-        context = SDL_GL_CreateContext(window);
-        SDL_GL_SetSwapInterval(0);
-        glewInit();
+        glfwMakeContextCurrent(window);
+
+        glewExperimental=GL_TRUE;
+        GLenum err=glewInit();
+        if(err!=GLEW_OK)
+        {
+            std::cout<<"glewInit failed, aborting."<<std::endl;
+        }
 
         this->init();
 
-        SDL_Event event_t;
-        bool quit = false;
+        while(!glfwWindowShouldClose(window)){
+            auto NOW = std::chrono::system_clock::now();
+            float delta = std::chrono::duration_cast<std::chrono::duration<float>>(NOW - LAST).count();
 
-        while(!quit){
-
-            while(SDL_PollEvent(&event_t)){
-                if( event_t.type == SDL_QUIT ) {
-                    quit = true;
-                }else
-                    KeyBoardController::events_t.push(event_t);
-            }
-
-            this->update((SDL_GetPerformanceCounter() - LAST) / (float)SDL_GetPerformanceFrequency());
-            LAST = SDL_GetPerformanceCounter();
+            this->update(delta);
+            LAST = NOW;
             this->render();
 
-            SDL_GL_SwapWindow(window);
+            glfwSwapBuffers(window);
+            glfwPollEvents();
         }
 
-        SDL_GL_DeleteContext(context);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
+        glfwDestroyWindow(window);
+        glfwTerminate();
+
+        exit(EXIT_SUCCESS);
     }
 
 }

@@ -20,6 +20,7 @@ typedef union {
     EventKey key;
     float delta[2];
 } EventData;
+
 struct Event {
     EventType type;
     EventData data;

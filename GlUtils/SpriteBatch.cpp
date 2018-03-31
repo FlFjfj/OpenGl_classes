@@ -25,11 +25,12 @@ namespace fjfj {
         this->square = new Mesh(vert, 6);
     }
 
-    void SpriteBatch::draw(Texture tex, GLint model_location, float x, float y, float width, float height) {
+    void SpriteBatch::draw(const Texture &tex, GLint model_location, float x, float y, float width, float height) {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
-        glUniformMatrix4fv(model_location, 1, false, glm::value_ptr(
+        glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
                 glm::scale(glm::translate(glm::mat4(), glm::vec3(x, y, 0)), glm::vec3(width, height, 1))));
+
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
 

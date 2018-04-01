@@ -168,7 +168,7 @@ void Player::update(float delta, float elapsed) {
                     speed += glm::normalize(coords - tentacle.end_coords) * 300.0f;
                     tentacle.returnEnd();
                     if(obj->getType() == 9) {
-                        reinterpret_cast<Lizard*>(obj)->speed -= glm::normalize(coords - tentacle.end_coords) * 600.0f;
+                        reinterpret_cast<Lizard*>(obj)->speed -= glm::normalize(coords - tentacle.end_coords) * 1000.0f;
                     }
                 } else {
                     // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;

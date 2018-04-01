@@ -51,7 +51,9 @@ void Tail::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
     shader->Use();
     GLint proj_loc = glGetUniformLocation(shader->Program, "u_ProjTrans");
     GLint model_loc = glGetUniformLocation(shader->Program, "u_ModelTrans");
+    GLint time_loc = glGetUniformLocation(shader->Program, "u_Time");
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
+    glUniform1f(time_loc, elapsed);
     float PI = glm::acos(0) * 2;
     float angle = std::atan2(speed.y, speed.x) - PI / 2;
 

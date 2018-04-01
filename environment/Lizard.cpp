@@ -57,7 +57,7 @@ void Lizard::update(float delta) {
             if (reload >= FRAMECOUNT_TAIL * FRAMELENGTH_TAIL) {
                 reload = SHOT_SPEED;
                 state = RELOAD;
-                Tail *tail = new Tail(coord, glm::normalize(-dist) * 300.0f, player, map);
+                Tail *tail = new Tail(coord, glm::normalize(-dist) * 600.0f, player, map);
                 map->push_back(tail);
             }
             break;

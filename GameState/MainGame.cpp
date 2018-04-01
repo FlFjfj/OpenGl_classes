@@ -15,6 +15,7 @@
 #include "../player/Player.h"
 #include "../GlUtils/BitmapFont.h"
 #include "../environment/Lizard.h"
+#include "../environment/Tail.h"
 
 namespace fjfj {
 
@@ -50,7 +51,9 @@ namespace fjfj {
         batch = new SpriteBatch();
         cam = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
 
-        world = new World(batch, cam, player);
+        world = new World(batch, cam, nullptr);
+        Tail::shader = new Shader("shader/tail.vert", "shader/tail.frag");
+        Tail::texture = new Texture("textures/tail.png");
         glfwSetMouseButtonCallback(window, PlayerController::mouseClickHandler);
         player = new Player(new PlayerController(window), batch, cam, &world->map);
         font = new BitmapFont("0123456789.", new Texture("texture/font.png"));

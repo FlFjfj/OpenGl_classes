@@ -22,8 +22,8 @@ class Lizard : public GameObject {
 
     const float WIDTH = 100;
     const float HEIGHT = 150;
-    const float MIN_DIST = 400;
-    const float MAX_DIST = 300;
+    const float MIN_DIST = 300;
+    const float MAX_DIST = 400;
     const float ACC = 400;
     const float SPEED = 200;
     const float SHOT_SPEED = 3;
@@ -58,6 +58,7 @@ public:
     static GLint u_FrameCount;
     static GLint u_FrameTime;
     static GLint u_Time;
+
 };
 
 

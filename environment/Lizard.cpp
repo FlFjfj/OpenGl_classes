@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Lizard.h"
+#include "Tail.h"
 
 Texture *Lizard::base, *Lizard::tail, *Lizard::slice;
 Texture *base, *tail, *slice;
@@ -17,7 +18,7 @@ GLint Lizard::u_Time;
 
 Lizard::Lizard(glm::vec2 coord, Player *player, std::vector<GameObject *> *map) : GameObject(nullptr, x, y),
                                                                                   coord(coord), player(player),
-                                                                                  state(READY) {}
+                                                                                  state(READY), map(map) {}
 
 void Lizard::update(float delta) {
     //check anim
@@ -31,11 +32,13 @@ void Lizard::update(float delta) {
         }
     }
 
+    auto dist = coord - player->coords;
     switch (state) {
         case RELOAD: {
             reload -= delta;
-            if (reload <= 0)
+            if (reload <= 0) {
                 state = READY;
+            }
             break;
         }
         case PROCESS: {
@@ -43,7 +46,8 @@ void Lizard::update(float delta) {
             if (reload >= FRAMECOUNT_TAIL * FRAMELENGTH_TAIL) {
                 reload = SHOT_SPEED;
                 state = RELOAD;
-                //create instance of tail;
+                Tail* tail = new Tail(coord, glm::normalize(-dist)*300.0f, player, map);
+                map->push_back(tail);
             }
             break;
         }
@@ -54,18 +58,15 @@ void Lizard::update(float delta) {
     x = coord.x;
     y = coord.y;
 
-    auto dist = coord - player->coords;
     if (glm::length(dist) < MIN_DIST) {
         speed += glm::normalize(dist) * delta * SPEED;
-        return;
     }
 
     if (glm::length(dist) > MAX_DIST) {
         speed -= glm::normalize(dist) * delta * SPEED;
-        return;
     }
 
-    if (state == READY) {
+    if (state == READY && glm::length(dist) < MAX_DIST && glm::length(dist) > MIN_DIST) {
         state = PROCESS;
         reload = 0;
     }

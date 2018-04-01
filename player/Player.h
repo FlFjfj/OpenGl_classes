@@ -116,6 +116,7 @@ struct Tentacle {
 };
 
 class Player {
+public:
     const static uint32_t NTENTACLES = 8;
     const static uint32_t HEAD_WIDTH = 100;
     const static uint32_t HEAD_HEIGHT = 100;
@@ -153,7 +154,7 @@ class Player {
 
     glm::vec2 translateToGameCoords(float x, float y);
 
-public:
+
     Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam, std::vector<GameObject *> *map);
 
     void update(float delta, float elapsed);

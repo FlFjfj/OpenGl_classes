@@ -23,7 +23,7 @@ using fjfj::SpriteBatch;
 class World {
 
     const float TERRAIN_CHANCE = 0.05;
-    const float EXIT_CHANCE = 0.001;
+    const float EXIT_CHANCE = 0.03;
 
     OrthographicCamera *cam;
     SpriteBatch *batch;
@@ -37,15 +37,15 @@ class World {
 
 public:
     static const int WORLD_SIZE = 30;
-    static const int PART_SIZE = 80;
+    static const int PART_SIZE = 150;
     static const int WORLD_WIDTH = 1440;
     static const int WORLD_HEIGHT = 920;
 
     World(SpriteBatch *batch, OrthographicCamera *cam);
 
-    void update(float delta, float elapsed);
+    void update(float delta);
 
-    void render(SpriteBatch *batch, OrthographicCamera *cam);
+    void render(SpriteBatch *batch, OrthographicCamera *cam, float elapsed);
 };
 
 

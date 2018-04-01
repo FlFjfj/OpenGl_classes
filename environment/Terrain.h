@@ -18,9 +18,9 @@ public:
 
     StaticObject(Texture *tex);
 
-    virtual void update(float delta, float elapsed) = 0;
+    virtual void update(float delta) = 0;
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, int x, int y) = 0;
+    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) = 0;
 };
 
 class Terrain : public StaticObject {
@@ -28,9 +28,9 @@ class Terrain : public StaticObject {
 public:
     Terrain(Texture *tex);
 
-    virtual void update(float delta, float elapsed);
+    virtual void update(float delta);
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, int x, int y);
+    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y);
 
     static Shader *TerrainShader;
     static GLint model_loc;
@@ -41,9 +41,9 @@ class Exit : public StaticObject {
 public:
     Exit(Texture *tex);
 
-    virtual void update(float delta, float elapsed);
+    virtual void update(float delta);
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, int x, int y);
+    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y);
 
     static Shader *exitShader;
     static GLint u_ModelTrans;
@@ -52,8 +52,8 @@ public:
     static GLint u_FrameTime;
     static GLint u_Time;
 
-    const int FRAMECOUNT = 7;
-    const float FRAMELENGTH = 0.3;
+    const int FRAMECOUNT = 5;
+    const float FRAMELENGTH = 0.1;
 };
 
 

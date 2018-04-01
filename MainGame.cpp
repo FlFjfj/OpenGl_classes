@@ -43,7 +43,7 @@ namespace fjfj {
 
     void MainGame::update(float delta) {
         elapsed += delta;
-        world->update(delta, elapsed);
+        world->update(delta);
         player->update(delta);
         cam->update();
     }
@@ -51,7 +51,7 @@ namespace fjfj {
     void MainGame::render() {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        world->render(batch, cam);
+        world->render(batch, cam, elapsed);
         player->render();
 
     }

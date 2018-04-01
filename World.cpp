@@ -44,37 +44,30 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
     Texture *terrainTex = new Texture("texture/corall.png");
     Texture *exitTex = new Texture("texture/exit.png");
 
-    map = new StaticObject **[this->WORLD_SIZE];
-    for (int i = 0; i < this->WORLD_SIZE; i++) {
-        map[i] = new StaticObject *[this->WORLD_SIZE]();
-        for (int j = 0; j < this->WORLD_SIZE; j++) {
-            double val = genNumber();
-            if (val <= this->TERRAIN_CHANCE && i > 0 & i < World::WORLD_SIZE - 1 && j > 0 & j < World::WORLD_SIZE - 1 &&
-                i != World::WORLD_SIZE / 2 && i != World::WORLD_SIZE / 2 + 1 && j != World::WORLD_SIZE / 2 &&
-                j != World::WORLD_SIZE / 2 + 1) {
-                map[i][j] = new Terrain(terrainTex, genNumber);
-                continue;
-            }
+    float world_size = World::WORLD_SIZE * World::PART_SIZE;
 
-            if (val <= this->TERRAIN_CHANCE + this->EXIT_CHANCE && i > 0 & i < World::WORLD_SIZE - 1 &&
-                j > 0 & j < World::WORLD_SIZE - 1 &&
-                i != World::WORLD_SIZE / 2 && i != World::WORLD_SIZE / 2 + 1 && j != World::WORLD_SIZE / 2 &&
-                j != World::WORLD_SIZE / 2 + 1) {
-                map[i][j] = new Exit(exitTex, genNumber);
-                continue;
-            }
+    for (int i = 0; i < World::WORLD_SIZE * World::WORLD_SIZE; i++) {
+        double val = genNumber();
+        if (val <= this->TERRAIN_CHANCE) {
+            float x = (genNumber() - 0.5f) * (world_size - 200);
+            float y = (genNumber() - 0.5f) * (world_size - 200);
+            map.push_back(new Terrain(terrainTex, x, y, genNumber));
+            continue;
+        }
 
-            map[i][j] = nullptr;
+        if (val <= this->TERRAIN_CHANCE + this->EXIT_CHANCE) {
+            float x = (genNumber() - 0.5f) * (world_size - 200);
+            float y = (genNumber() - 0.5f) * (world_size - 200);
+            map.push_back(new Exit(exitTex, x, y, genNumber));
+            continue;
         }
     }
 }
 
 void World::update(float delta) {
     for (int i = 0; i < this->WORLD_SIZE; i++) {
-        for (int j = 0; j < this->WORLD_SIZE; j++) {
-            if (map[i][j] != nullptr) {
-                map[i][j]->update(delta);
-            }
+        for (auto el: map) {
+            el->update(delta);
         }
     }
 }
@@ -86,11 +79,7 @@ void World::render(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
     batch->draw(this->background, this->model_loc, 0, 0, size, size);
     glUseProgram(0);
 
-    for (int i = 0; i < World::WORLD_SIZE; i++) {
-        for (int j = 0; j < World::WORLD_SIZE; j++) {
-            if (map[i][j] != nullptr) {
-                map[i][j]->draw(batch, cam, elapsed, i, j);
-            }
-        }
+    for (auto el: map) {
+        el->draw(batch, cam, elapsed);
     }
 }

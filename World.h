@@ -13,6 +13,7 @@
 #include "environment/Terrain.h"
 
 #include <glm/glm.hpp>
+#include <vector>
 
 using fjfj::Mesh;
 using fjfj::Texture;
@@ -33,7 +34,7 @@ class World {
     GLint proj_loc;
     GLint model_loc;
 
-    StaticObject ***map;
+    std::vector<StaticObject*> map;
 
 public:
     static const int WORLD_SIZE = 30;

@@ -15,23 +15,28 @@ using namespace fjfj;
 class StaticObject {
 public:
     Texture *tex;
+    float x, y;
 
-    explicit StaticObject(Texture *tex);
+    explicit StaticObject(Texture *tex, float x, float y);
 
     virtual void update(float delta) = 0;
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) = 0;
+    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) = 0;
+
+    virtual int getType() = 0;
 };
 
 class Terrain : public StaticObject {
     float deltaTime;
     float deltaSpeed;
 public:
-    explicit Terrain(Texture *tex, double (*gen)());
+    explicit Terrain(Texture *tex, float x, float y, double (*gen)());
 
     void update(float delta) override;
 
-    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) override;
+    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) override;
+
+    int getType() override { return 0; };
 
     static Shader *TerrainShader;
     static GLint u_ModelTrans;
@@ -41,18 +46,20 @@ public:
     static GLint u_Time;
 
     const int FRAMECOUNT = 3;
-    const float FRAMELENGTH = 0.7 ;
+    const float FRAMELENGTH = 0.7;
 };
 
 class Exit : public StaticObject {
     float deltaTime;
     float deltaSpeed;
 public:
-    explicit Exit(Texture *tex, double (*gen)());
+    explicit Exit(Texture *tex, float x, float y, double (*gen)());
 
     void update(float delta) override;
 
-    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) override;
+    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) override;
+
+    int getType() override { return 1; };
 
     static Shader *exitShader;
     static GLint u_ModelTrans;

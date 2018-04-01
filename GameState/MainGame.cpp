@@ -27,6 +27,8 @@ namespace fjfj {
     const int WORLD_WIDTH = 1440;
     const int WORLD_HEIGHT = 920;
 
+    GLFWwindow *win;
+
     void MainGame::init(GLFWwindow *window) {
         glEnable(GL_MULTISAMPLE);
         glDisable(GL_DEPTH_TEST);
@@ -41,12 +43,14 @@ namespace fjfj {
         glfwSetMouseButtonCallback(window, PlayerController::mouseClickHandler);
         player = new Player(new PlayerController(window), batch, cam, &world->map);
         font = new BitmapFont("0123456789.", new Texture("texture/font.png"));
+
+        win = window;
     }
 
     void MainGame::update(float delta) {
         elapsed += delta;
         world->update(delta);
-        player->update(delta);
+        player->update(delta, elapsed);
         cam->update();
     }
 
@@ -57,6 +61,17 @@ namespace fjfj {
         player->render(elapsed);
 
         font->draw(batch, cam, std::to_string(elapsed), -WORLD_WIDTH / 2 + 25, WORLD_HEIGHT / 2 - 25, 40, 40);
+    }
+
+    void MainGame::restart() {
+        elapsed = 0;
+        delete (world);
+        delete (player);
+        delete (font);
+        delete (batch);
+        delete (cam);
+
+        MainGame::init(win);
     }
 
 }

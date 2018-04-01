@@ -10,6 +10,8 @@
 #include "../GlUtils/OrthographicCamera.h"
 #include "../GlUtils/Texture.h"
 #include "../GlUtils/Shader.h"
+#include "../GlUtils/BitmapFont.h"
+#include "MainGame.h"
 
 GLFWwindow *window;
 
@@ -21,6 +23,7 @@ fjfj::OrthographicCamera *cam;
 
 fjfj::Texture *tex;
 fjfj::Shader *shader;
+fjfj::BitmapFont *font;
 
 GLint proj_loc;
 GLint model_loc;
@@ -38,11 +41,14 @@ void fjfj::GameOver::init(GLFWwindow *win) {
 
     model_loc = glGetUniformLocation(shader->Program, "u_ModelTrans");
     proj_loc = glGetUniformLocation(shader->Program, "u_ProjTrans");
+
+    font = new BitmapFont("0123456789.", new Texture("texture/font.png"));
 }
 
 void fjfj::GameOver::update(float delta) {
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         ProgramBase::changeState(ProgramBase::MENU);
+        MainGame::restart();
     }
 
     cam->update();
@@ -54,6 +60,8 @@ void fjfj::GameOver::render() {
     shader->Use();
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
     batch->draw(*tex, model_loc, 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+
+    font->draw(batch, cam, std::to_string(score), 70, -170, 100, 100);
 }
 
 void fjfj::GameOver::setScore(float time) {

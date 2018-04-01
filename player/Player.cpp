@@ -51,7 +51,7 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     speed = {-1, -1};
 }
 
-void Player::update(float delta) {
+void Player::update(float delta, float elapsed) {
     //coords += speed*delta;
     //speed -= glm::normalize(speed)*PLAYER_ACC*delta;
     // elapsed += delta;
@@ -132,7 +132,7 @@ void Player::update(float delta) {
     auto obj = getCollision(coords);
     if (obj != nullptr && obj->getType() == 1) {
         ProgramBase::changeState(ProgramBase::DEAD);
-        //GameOver::setScore(fjfj::elapsed);
+        GameOver::setScore(elapsed);
     }
 
     if (glm::length(speed) > 0.001) {

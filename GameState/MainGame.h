@@ -11,9 +11,13 @@ namespace fjfj {
 
     class MainGame {
     public:
-        static void init(GLFWwindow* window);
+        static void init(GLFWwindow *window);
+
         static void update(float delta);
+
         static void render();
+
+        static void restart();
     };
 
 }

@@ -169,7 +169,7 @@ class Player {
 public:
     Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam, std::vector<StaticObject *> *map);
 
-    void update(float delta);
+    void update(float delta, float elapsed);
 
     void render(float elapsed);
 

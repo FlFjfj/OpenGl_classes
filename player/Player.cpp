@@ -12,7 +12,7 @@
 
 #include <random>
 #include <ctime>
-
+#include "../environment/Lizard.h"
 Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam,
                std::vector<GameObject *> *map)
         : controller(controller),
@@ -159,13 +159,17 @@ void Player::update(float delta, float elapsed) {
     for (auto &tentacle : tentacles) {
         auto obj = getCollision(tentacle.end_coords);
         if (obj != nullptr) {
-            if (obj->getType() == 0 && tentacle.state == MOVE) {
+            if (obj->getType() != 1 && tentacle.state == MOVE) {
                 if (tentacle.push) {
                     speed += glm::normalize(coords - tentacle.end_coords) * 300.0f;
                     tentacle.returnEnd();
+                    if(obj->getType() == 9) {
+                        reinterpret_cast<Lizard*>(obj)->speed -= glm::normalize(coords - tentacle.end_coords) * 600.0f;
+                    }
                 } else {
                     // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;
-                    tentacle.connectEnd();
+                   if(obj->getType() == 0)
+                       tentacle.connectEnd();
                 }
             }
         }

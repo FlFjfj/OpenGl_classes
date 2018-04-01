@@ -16,12 +16,12 @@ public:
     static Shader *shader;
     static Texture *texture;
     float elapsed;
+    float lifetime=0;
     glm::vec2 coords;
     glm::vec2 speed;
     Player* player;
-    const float selfspeed = 300;
     std::vector<GameObject *> *map;
-    const float TIMETOLIVE = 2;
+    const float TIMETOLIVE = 5;
 
     Tail(glm::vec2 coords, glm::vec2 basespeed, Player* player, std::vector<GameObject*>* map);
 

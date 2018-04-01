@@ -6,6 +6,7 @@
 
 #include "Lizard.h"
 #include "Tail.h"
+#include "../World.h"
 
 Texture *Lizard::base, *Lizard::tail, *Lizard::slice;
 Texture *base, *tail, *slice;
@@ -32,6 +33,16 @@ void Lizard::update(float delta) {
         }
     }
 
+    auto obj = getCollision(coord);
+    if (obj != nullptr && obj->getType() == 1) {
+        for (auto it = map->begin(); it != map->end(); ++it) {
+            if (*it == this) {
+                map->erase(it);
+                return;
+            }
+        }
+    }
+
     auto dist = coord - player->coords;
     switch (state) {
         case RELOAD: {
@@ -46,7 +57,7 @@ void Lizard::update(float delta) {
             if (reload >= FRAMECOUNT_TAIL * FRAMELENGTH_TAIL) {
                 reload = SHOT_SPEED;
                 state = RELOAD;
-                Tail* tail = new Tail(coord, glm::normalize(-dist)*300.0f, player, map);
+                Tail *tail = new Tail(coord, glm::normalize(-dist) * 300.0f, player, map);
                 map->push_back(tail);
             }
             break;
@@ -100,4 +111,16 @@ void Lizard::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
         }
     }
     glUseProgram(0);
+}
+
+GameObject *Lizard::getCollision(glm::vec2 coords) {
+    float COLLISIONBOUND = World::PART_SIZE / 2;
+    for (auto el : *map) {
+        glm::vec2 objc = {el->x, el->y};
+        if (glm::length(coords - objc) < COLLISIONBOUND) {
+            return el;
+        }
+    }
+
+    return nullptr;
 }

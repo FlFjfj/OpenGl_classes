@@ -68,10 +68,8 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam, Player *player) : back
 }
 
 void World::update(float delta) {
-    for (int i = 0; i < this->WORLD_SIZE; i++) {
-        for (auto el: map) {
-            el->update(delta);
-        }
+    for (auto el: map) {
+        el->update(delta);
     }
 }
 

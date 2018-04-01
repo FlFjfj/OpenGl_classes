@@ -15,7 +15,7 @@
 using namespace fjfj;
 
 class Lizard : public GameObject {
-
+public:
     enum LizState {
         READY, PROCESS, RELOAD
     };
@@ -24,9 +24,9 @@ class Lizard : public GameObject {
     const float HEIGHT = 150;
     const float MIN_DIST = 300;
     const float MAX_DIST = 400;
-    const float ACC = 400;
-    const float SPEED = 200;
-    const float SHOT_SPEED = 3;
+    const float ACC = 300;
+    const float SPEED = 450;
+    const float SHOT_SPEED = 2;
 
     float reload;
     LizState state;
@@ -35,14 +35,14 @@ class Lizard : public GameObject {
     glm::vec2 speed;
 
     const int FRAMECOUNT = 5;
-    const float FRAMELENGTH = 0.6;
+    const float FRAMELENGTH = 0.5;
     const int FRAMECOUNT_TAIL = 3;
-    const float FRAMELENGTH_TAIL = 0.6;
+    const float FRAMELENGTH_TAIL = 0.4;
 
     std::vector<GameObject *> *map;
     Player *player;
 
-public:
+
     Lizard(glm::vec2 coord, Player *player, std::vector<GameObject *> *map);
 
     void update(float delta) override;
@@ -50,6 +50,7 @@ public:
     void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) override;
 
     int getType() override { return 9; }
+    GameObject* getCollision(glm::vec2 coords);
 
     static Texture *base, *tail, *slice;
     static Shader *shader;

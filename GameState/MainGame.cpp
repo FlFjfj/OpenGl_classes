@@ -52,8 +52,8 @@ namespace fjfj {
         cam = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
 
         world = new World(batch, cam, nullptr);
-        Tail::shader = new Shader("shader/tail.vert", "shader/tail.frag");
-        Tail::texture = new Texture("textures/tail.png");
+        Tail::shader = new Shader("shader/light.vert", "shader/light.frag");
+        Tail::texture = new Texture("texture/tail.png");
         glfwSetMouseButtonCallback(window, PlayerController::mouseClickHandler);
         player = new Player(new PlayerController(window), batch, cam, &world->map);
         font = new BitmapFont("0123456789.", new Texture("texture/font.png"));

@@ -5,6 +5,8 @@
 #include "Terrain.h"
 #include "../World.h"
 
+#include <iostream>
+
 StaticObject::StaticObject(Texture *tex) : tex(tex) {}
 
 Shader *Terrain::TerrainShader = nullptr;
@@ -16,7 +18,8 @@ Terrain::Terrain(Texture *tex) : StaticObject(tex) {}
 void Terrain::draw(SpriteBatch *batch, OrthographicCamera *cam, int x, int y) {
     Terrain::TerrainShader->Use();
     glUniformMatrix4fv(Terrain::proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
-    batch->draw(*this->tex, Terrain::model_loc, 0, 0, World::PART_SIZE, World::PART_SIZE);
+    batch->draw(*this->tex, Terrain::model_loc, (x - World::WORLD_SIZE / 2.0f) * World::PART_SIZE,
+                (y - World::WORLD_SIZE / 2.0f) * World::PART_SIZE, World::PART_SIZE, World::PART_SIZE);
     glUseProgram(0);
 }
 

@@ -22,8 +22,8 @@ using fjfj::SpriteBatch;
 
 class World {
 
-    const float TERRAIN_CHANCE = 0.2;
-    const float EXIT_CHANCE = 0.1;
+    const float TERRAIN_CHANCE = 0.05;
+    const float EXIT_CHANCE = 0.001;
 
     OrthographicCamera *cam;
     SpriteBatch *batch;
@@ -36,8 +36,8 @@ class World {
     StaticObject ***map;
 
 public:
-    static const int WORLD_SIZE = 50;
-    static const int PART_SIZE = 50;
+    static const int WORLD_SIZE = 30;
+    static const int PART_SIZE = 80;
 
     World(SpriteBatch *batch, OrthographicCamera *cam);
 

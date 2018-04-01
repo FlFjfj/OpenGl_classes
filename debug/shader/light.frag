@@ -15,8 +15,8 @@ void main() {
                                 normalize(2 * texture2D(texture0, vec2(v_TexCoord.x + 0.5, v_TexCoord.y)).xyz - vec3(1.0)),
                                 normalize(light_pos - v_WorldCoord)
                                 )
-                            ) * 0.7;
+                            ) * 0.3;
     vec4 color = texture2D(texture0, v_TexCoord);
-    frag_color = vec4(color.xyz * (0.3 + light_power), color.a);
+    frag_color = vec4(color.xyz * (0.7 + light_power), color.a);
 
 }

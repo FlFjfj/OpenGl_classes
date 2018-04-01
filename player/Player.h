@@ -23,6 +23,7 @@ enum TentacleState {
 
 struct Tentacle {
     float angle;
+    int texIndex;
     TentacleState state;
     glm::vec2 begin_coords;
     glm::vec2 end_coords;
@@ -91,7 +92,7 @@ class Player {
     const static uint32_t CAMRAD = 300;
 
     Texture *head;
-    Texture *tentacle_tex;
+    Texture **tentacle_tex;
     GLint proj_loc;
     GLint model_loc;
     Shader *light_shader;

@@ -7,11 +7,16 @@
 #include "PlayerController.h"
 #include "../World.h"
 
+#include <random>
+#include <ctime>
+
 Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam)
         : controller(controller),
           batch(batch), cam(cam) {
     head = new Texture("texture/head.png");
-    tentacle_tex = new Texture("texture/tenta1.png");
+    tentacle_tex = new Texture *[2];
+    tentacle_tex[0] = new Texture("texture/tenta1.png");
+    tentacle_tex[1] = new Texture("texture/tenta2.png");
     light_shader = new Shader("shader/light.vert", "shader/light.frag");
     tentacle_shader = new Shader("shader/tenta.vert", "shader/tenta.frag");
     model_loc = glGetUniformLocation(light_shader->Program, "u_ModelTrans");
@@ -23,6 +28,9 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     u_FrameTime = glGetUniformLocation(tentacle_shader->Program, "u_FrameTime");
     u_Time = glGetUniformLocation(tentacle_shader->Program, "u_Time");
 
+    std::mt19937 gen(unsigned(std::time(0)));
+    std::uniform_int_distribution<> dist(0, 1);
+
     float PI = glm::acos(0) * 2;
     for (int i = 0; i < NTENTACLES; i++) {
         auto &tentacle = tentacles[i];
@@ -31,7 +39,7 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
         tentacle.end_coords = {0, 0};
         tentacle.speed = 0;
         tentacle.state = SLEEEP;
-
+        tentacle.texIndex = dist(gen);
     }
 
     coords = {0, 0};
@@ -72,20 +80,22 @@ void Player::update(float delta) {
         }
     }
 
-    if (coords.x < -maxsize / 2) {
-        coords.x = -maxsize / 2;
+    const int delta_stip = 100;
+
+    if (coords.x - delta_stip < -maxsize / 2) {
+        coords.x = -maxsize / 2 + delta_stip;
     }
 
-    if (coords.x > maxsize / 2) {
-        coords.x = maxsize / 2;
+    if (coords.x + delta_stip > maxsize / 2) {
+        coords.x = maxsize / 2 - delta_stip;
     }
 
-    if (coords.y < -maxsize / 2) {
-        coords.y = -maxsize / 2;
+    if (coords.y - delta_stip < -maxsize / 2) {
+        coords.y = -maxsize / 2 + delta_stip;
     }
 
-    if (coords.y > maxsize / 2) {
-        coords.y = maxsize / 2;
+    if (coords.y + delta_stip > maxsize / 2) {
+        coords.y = maxsize / 2 - delta_stip;
     }
     while (controller->hasEvent()) {
         auto e = controller->getEvent();
@@ -128,7 +138,7 @@ void Player::render(float elapsed) {
         glUniform1f(u_Time, tentacle.state == SLEEEP ? elapsed + i * 0.15f : 0.0f);
         float height = glm::length(tentacle.begin_coords - tentacle.end_coords);
         auto coords = (tentacle.begin_coords + tentacle.end_coords) * 0.5f;
-        batch->draw(*tentacle_tex, u_ModelTrans, coords, height, 50, tentacle.getDynamicAngle());
+        batch->draw(*tentacle_tex[tentacle.texIndex], u_ModelTrans, coords, height, 50, tentacle.getDynamicAngle());
     }
 
     //batch->draw(*tentacle_tex, u_ModelTrans, 0, 0, 200, 200);

@@ -78,7 +78,7 @@ struct Tentacle {
         return std::atan2(vec.y, vec.x);
     }
 
-    void logvec2(const char *name, glm::vec2 vec) {
+    static void logvec2(const char *name, glm::vec2 vec) {
         std::cout << name << " " << vec.x << " " << vec.y << std::endl;
     }
 };

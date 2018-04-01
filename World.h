@@ -38,6 +38,8 @@ class World {
 public:
     static const int WORLD_SIZE = 30;
     static const int PART_SIZE = 80;
+    static const int WORLD_WIDTH = 1440;
+    static const int WORLD_HEIGHT = 920;
 
     World(SpriteBatch *batch, OrthographicCamera *cam);
 

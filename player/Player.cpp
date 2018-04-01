@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "../GlUtils/OrthographicCamera.h"
 #include "PlayerController.h"
-
+#include "../World.h"
 
 Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam)
         : controller(controller),
@@ -28,7 +28,7 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
         auto &tentacle = tentacles[i];
         tentacle.angle = 0.25f * i * PI;
         tentacle.begin_coords = {0, 0};
-        tentacle.end_coords = {0,0};
+        tentacle.end_coords = {0, 0};
         tentacle.speed = 0;
         tentacle.state = SLEEEP;
 
@@ -60,8 +60,16 @@ void Player::update(float delta) {
     }
 
     auto r = coords - cam->position;
-    if(glm::length(r) > CAMRAD ) {
+    if (glm::length(r) > CAMRAD) {
         auto newpos = cam->position + glm::normalize(r) * (glm::length(r) - float(CAMRAD));
+        float maxsize = World::PART_SIZE * World::WORLD_SIZE;
+        if (World::WORLD_WIDTH / 2 - maxsize / 2 < newpos.x && newpos.x < maxsize / 2 - World::WORLD_WIDTH / 2) {
+            cam->position.x = newpos.x;
+        }
+
+        if (World::WORLD_HEIGHT / 2 - maxsize / 2 < newpos.y && newpos.y < maxsize / 2 - World::WORLD_HEIGHT / 2) {
+            cam->position.y = newpos.y;
+        }
     }
 
     while (controller->hasEvent()) {

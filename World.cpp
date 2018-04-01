@@ -29,6 +29,7 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam, Player *player) : back
                                                                                         "shader/back.frag") {
     model_loc = glGetUniformLocation(back_shader.Program, "u_ModelTrans");
     proj_loc = glGetUniformLocation(back_shader.Program, "u_ProjTrans");
+    time_loc = glGetUniformLocation(back_shader.Program, "u_Time");
 
     Terrain::TerrainShader = new Shader("shader/StaticObject.vert", "shader/StaticObject.frag");
     Terrain::u_ModelTrans = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ModelTrans");
@@ -76,6 +77,7 @@ void World::update(float delta) {
 void World::render(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
     back_shader.Use();
     int size = this->PART_SIZE * this->WORLD_SIZE;
+    glUniform1f(time_loc, elapsed);
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
     batch->draw(this->background, this->model_loc, 0, 0, size, size);
     glUseProgram(0);

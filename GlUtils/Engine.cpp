@@ -24,7 +24,7 @@ namespace fjfj {
             exit(EXIT_FAILURE);
         }
 
-        window = glfwCreateWindow(1440, 920, "Simple example", nullptr, nullptr);
+        window = glfwCreateWindow(1920, 1080, "Simple example", glfwGetPrimaryMonitor(), nullptr);
 
         if (!window) {
             glfwTerminate();

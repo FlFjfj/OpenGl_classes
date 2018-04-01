@@ -8,6 +8,7 @@ out vec2 v_TexCoord;
 
 uniform mat4 u_ModelTrans;
 uniform mat4 u_ProjTrans;
+uniform float u_Time;
 
 void main() {
     v_TexCoord = a_TexCoord;

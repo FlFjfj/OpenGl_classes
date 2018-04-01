@@ -35,13 +35,14 @@ public:
     Texture background;
     GLint proj_loc;
     GLint model_loc;
+    GLint time_loc;
 
     std::vector<GameObject*> map;
 
     static const int WORLD_SIZE = 30;
     static const int PART_SIZE = 150;
-    static const int WORLD_WIDTH = 1440;
-    static const int WORLD_HEIGHT = 920;
+    static const int WORLD_WIDTH = 1920;
+    static const int WORLD_HEIGHT = 1080;
 
     World(SpriteBatch *batch, OrthographicCamera *cam, Player *player);
 

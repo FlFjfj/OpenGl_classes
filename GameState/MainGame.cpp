@@ -29,8 +29,8 @@ namespace fjfj {
     float elapsed = 0;
     float delay = 0;
 
-    const int WORLD_WIDTH = 1440;
-    const int WORLD_HEIGHT = 920;
+    const int WORLD_WIDTH = 1920;
+    const int WORLD_HEIGHT = 1080;
 
     GLFWwindow *win;
 
@@ -40,6 +40,7 @@ namespace fjfj {
     GLuint fbo;
     Shader *post;
     GLint model_loc;
+    GLint time_loc;
     Texture *fbo_tex;
 
     double genNumber() {
@@ -70,6 +71,7 @@ namespace fjfj {
 
         post = new Shader("shader/post.vert", "shader/post.frag");
         model_loc = glGetUniformLocation(post->Program, "u_ModelTrans");
+        time_loc = glGetUniformLocation(post->Program, "u_Time");
 
         batch = new SpriteBatch();
         cam = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
@@ -127,6 +129,7 @@ namespace fjfj {
         glClear(GL_COLOR_BUFFER_BIT);
 
         post->Use();
+        glUniform1f(time_loc, elapsed);
         batch->draw(*fbo_tex, model_loc, 0, 0, 2, 2);
         glUseProgram(0);
 

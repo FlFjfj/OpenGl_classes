@@ -57,7 +57,7 @@ void Tail::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
     float PI = glm::acos(0) * 2;
     float angle = std::atan2(speed.y, speed.x) - PI / 2;
 
-    batch->draw(*texture, model_loc, coords.x, coords.y, 70, 70, angle);
+    batch->draw(*texture, model_loc, coords.x, coords.y, 70, 70, angle + elapsed * 20);
     glUseProgram(0);
 }
 

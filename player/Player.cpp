@@ -201,7 +201,6 @@ void Player::render(float elapsed) {
 
     light_shader->Use();
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
-    auto vec = glm::normalize(speed);
     float angle = std::atan2(speed.y, speed.x) - PI / 2;
     batch->draw(*head, model_loc, coords.x, coords.y, HEAD_WIDTH, HEAD_HEIGHT, angle);
 

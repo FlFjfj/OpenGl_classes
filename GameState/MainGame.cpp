@@ -4,6 +4,8 @@
 
 #include <GL/glew.h>
 #include <iostream>
+#include <ctime>
+#include <random>
 
 #include "MainGame.h"
 #include "../GlUtils/OrthographicCamera.h"
@@ -24,11 +26,19 @@ namespace fjfj {
     BitmapFont *font;
 
     float elapsed = 0;
+    float delay = 0;
 
     const int WORLD_WIDTH = 1440;
     const int WORLD_HEIGHT = 920;
 
     GLFWwindow *win;
+
+    std::mt19937 gen(unsigned(std::time(0)));
+    std::uniform_real_distribution<> dist(0, 1);
+
+    double genNumber() {
+        return dist(gen);
+    }
 
     void MainGame::init(GLFWwindow *window) {
         glEnable(GL_MULTISAMPLE);
@@ -40,16 +50,38 @@ namespace fjfj {
         batch = new SpriteBatch();
         cam = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
 
-        world = new World(batch, cam);
+        world = new World(batch, cam, player);
         glfwSetMouseButtonCallback(window, PlayerController::mouseClickHandler);
         player = new Player(new PlayerController(window), batch, cam, &world->map);
         font = new BitmapFont("0123456789.", new Texture("texture/font.png"));
+
+        Lizard::base = new Texture("texture/lizard.png");
+        Lizard::tail = new Texture("texture/tail.png");
+        Lizard::slice = new Texture("texture/tailshot.png");
+
+        Lizard::shader = new Shader("shader/animated.vert", "shader/animated.frag");
+
+        Lizard::u_ModelTrans = glGetUniformLocation(Lizard::shader->Program, "u_ModelTrans");
+        Lizard::u_ProjTrans = glGetUniformLocation(Lizard::shader->Program, "u_ProjTrans");
+        Lizard::u_FrameCount = glGetUniformLocation(Lizard::shader->Program, "u_FrameCount");
+        Lizard::u_FrameTime = glGetUniformLocation(Lizard::shader->Program, "u_FrameTime");
+        Lizard::u_Time = glGetUniformLocation(Lizard::shader->Program, "u_Time");
 
         win = window;
     }
 
     void MainGame::update(float delta) {
         elapsed += delta;
+
+        delay -= delta;
+        if (delay <= 0) {
+            delay += genNumber() * 30;
+            float world_size = World::WORLD_SIZE * World::PART_SIZE;
+            float x = (genNumber() - 0.5f) * (world_size - 200);
+            float y = (genNumber() - 0.5f) * (world_size - 200);
+            world->map.push_back(new Lizard({x, y}, player, &world->map));
+        }
+
         world->update(delta);
         player->update(delta, elapsed);
         cam->update();

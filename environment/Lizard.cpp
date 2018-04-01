@@ -6,23 +6,18 @@
 
 #include "Lizard.h"
 
-Lizard::Lizard(glm::vec2 coord, Player *player, std::vector<GameObject *> *map) : GameObject(nullptr, x, y), coord(coord), player(player),
-                                                                                  speed({0, 0}), map(map), reload(0),
-                                                                                  state(READY) {
-    base = new Texture("texture/lizard.png");
-    tail = new Texture("texture/tail.png");
-    slice = new Texture("texture/tailshot.png");
+Texture *Lizard::base, *Lizard::tail, *Lizard::slice;
+Texture *base, *tail, *slice;
+Shader *Lizard::shader;
+GLint Lizard::u_ModelTrans;
+GLint Lizard::u_ProjTrans;
+GLint Lizard::u_FrameCount;
+GLint Lizard::u_FrameTime;
+GLint Lizard::u_Time;
 
-    shader = new Shader("shader/animated.vert", "shader/animated.frag");
-
-    u_ModelTrans = glGetUniformLocation(shader->Program, "u_ModelTrans");
-    u_ProjTrans = glGetUniformLocation(shader->Program, "u_ProjTrans");
-    u_FrameCount = glGetUniformLocation(shader->Program, "u_FrameCount");
-    u_FrameTime = glGetUniformLocation(shader->Program, "u_FrameTime");
-    u_Time = glGetUniformLocation(shader->Program, "u_Time");
-
-    //tail_shader = new Shader("shader/tail.vert", "shader/tail.frag");
-}
+Lizard::Lizard(glm::vec2 coord, Player *player, std::vector<GameObject *> *map) : GameObject(nullptr, x, y),
+                                                                                  coord(coord), player(player),
+                                                                                  state(READY) {}
 
 void Lizard::update(float delta) {
     //check anim
@@ -79,6 +74,9 @@ void Lizard::update(float delta) {
 
 void Lizard::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
     float PI = glm::acos(0) * 2;
+    auto dist = player->coords - coord;
+    auto vec = glm::normalize(dist);
+    float angle = std::atan2(vec.y, vec.x) - PI / 2 + PI / 8;
     shader->Use();
     switch (state) {
         case PROCESS: {
@@ -86,8 +84,6 @@ void Lizard::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
             glUniform1i(u_FrameCount, FRAMECOUNT_TAIL);
             glUniform1f(u_FrameTime, FRAMELENGTH_TAIL);
             glUniform1f(u_Time, reload);
-            auto vec = glm::normalize(speed);
-            float angle = std::atan2(speed.y, speed.x) - PI / 4;
             batch->draw(*slice, u_ModelTrans, coord, WIDTH, HEIGHT, angle);
             break;
         }
@@ -97,8 +93,6 @@ void Lizard::draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) {
             glUniform1i(u_FrameCount, FRAMECOUNT);
             glUniform1f(u_FrameTime, FRAMELENGTH);
             glUniform1f(u_Time, elapsed);
-            auto vec = glm::normalize(speed);
-            float angle = std::atan2(speed.y, speed.x) - PI / 4;
             batch->draw(*base, u_ModelTrans, coord, WIDTH, HEIGHT, angle);
             break;
 

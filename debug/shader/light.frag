@@ -17,6 +17,6 @@ void main() {
                                 )
                             ) * 0.3;
     vec4 color = texture2D(texture0, v_TexCoord);
-    frag_color = vec4(color.xyz * (0.7 + light_power), color.a);
+    frag_color = vec4(color.xyz, color.a);
 
 }

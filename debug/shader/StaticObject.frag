@@ -31,5 +31,5 @@ void main() {
     vec4 color2 = texture2D(texture0, vec2(v_TexCoord.x, v_TexCoord.y + (v_Frame + 1) % u_FrameCount / float(u_FrameCount)));
     vec4 color = mix(color1, color2, v_Trans);
 
-    frag_color = vec4((color * (0.7 + light_power)).xyz, color.a);
+    frag_color = vec4(color.xyz, color.a);
 }

@@ -7,7 +7,6 @@
 #include "PlayerController.h"
 
 
-
 Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam)
         : controller(controller),
           batch(batch), cam(cam) {
@@ -42,6 +41,24 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
 
 void Player::update(float delta) {
     elapsed += delta;
+    auto v_offset = delta * vertical_speed;
+    auto h_offset = delta * horizontal_speed;
+    if (controller->moveBottom()) {
+        coords -= v_offset;
+    }
+
+    if (controller->moveTop()) {
+        coords += v_offset;
+    }
+
+    if (controller->moveRight()) {
+        coords += h_offset;
+    }
+
+    if (controller->moveLeft()) {
+        coords -= h_offset;
+    }
+
     while (controller->hasEvent()) {
         auto e = controller->getEvent();
         auto target = translateToGameCoords(e.data.delta[0], e.data.delta[1]);
@@ -60,7 +77,7 @@ void Player::update(float delta) {
 
         if (bestIndex != -1) {
             auto &tentacle = tentacles[bestIndex];
-            std::cout << "index " << bestIndex << "target x " <<  target.x << " y " << target.y << std::endl;
+            std::cout << "index " << bestIndex << "target x " << target.x << " y " << target.y << std::endl;
             tentacle.makeMove(target);
         }
     }
@@ -74,16 +91,17 @@ void Player::render() {
     float PI = glm::acos(0) * 2;
     float correcter = PI / 3;
 
+
     tentacle_shader->Use();
     glUniformMatrix4fv(u_ProjTrans, 1, GL_FALSE, glm::value_ptr(cam->proj));
     glUniform1i(u_FrameCount, FRAMECOUNT);
     glUniform1f(u_FrameTime, FRAMELENGTH);
     for (int i = 0; i < NTENTACLES; i++) {
-        glUniform1f(u_Time, elapsed + i*0.15f);
-        auto& tentacle = tentacles[i];
+        auto &tentacle = tentacles[i];
+        glUniform1f(u_Time, tentacle.state == SLEEEP ? elapsed + i * 0.15f : 0.0f);
         float height = glm::length(tentacle.begin_coords - tentacle.end_coords);
-        auto coords = (tentacle.begin_coords + tentacle.end_coords)*0.5f;
-        batch->draw(*tentacle_tex, u_ModelTrans, coords, height, 50, tentacle.angle);
+        auto coords = (tentacle.begin_coords + tentacle.end_coords) * 0.5f;
+        batch->draw(*tentacle_tex, u_ModelTrans, coords, height, 50, tentacle.getDynamicAngle());
     }
 
     //batch->draw(*tentacle_tex, u_ModelTrans, 0, 0, 200, 200);
@@ -106,6 +124,7 @@ glm::vec2 Player::translateToGameCoords(float x, float y) {
     coords.x = x / 2 * cam->getWidth();
     coords.y = y / 2 * cam->getHeight();
     coords += cam->getPosition();
+    return coords;
 }
 
 glm::vec2 Player::getTentacleOffset(float angle) {

@@ -10,9 +10,9 @@
 #include "../GlUtils/Mesh.h"
 #include "../GlUtils/Texture.h"
 #include "PlayerController.h"
-#include "../GlUtils/SpriteBatch.h"
-#include "../GlUtils/Shader.h"
+#include "../GlUtils/ahader.h"
 #include "../GlUtils/OrthographicCamera.h"
+#include <cmath>
 
 using namespace fjfj;
 
@@ -28,9 +28,9 @@ struct Tentacle {
     bool push;
     glm::vec2 target;
     float speed;
-    const float BASIC_ACC = -500;
-    const float BASIC_SPEED = 500;
-    const float BASIC_LENGTH = 130;
+    const float BASIC_ACC = -1000;
+    const float BASIC_SPEED = 1000;
+    const float BASIC_LENGTH = 100;
 
     void makeMove(glm::vec2 target) {
         this->target = target;
@@ -49,8 +49,20 @@ struct Tentacle {
             case MOVE:
                 begin_coords = base;
                 speed += BASIC_ACC * delta;
-                end_coords += glm::normalize(end_coords - target) * delta * speed;
-                if (glm::length(begin_coords - end_coords) < 1) {
+                logvec2("before", end_coords);
+                if(speed > 0) {
+                    end_coords += glm::normalize(target - end_coords) * delta * speed;
+                } else {
+                    end_coords += glm::normalize(end_coords - begin_coords ) * delta * speed;
+                }
+
+                logvec2("after ", end_coords);
+                std::cout << "speed "
+                          << speed
+                          << " end len "
+                          << glm::length(begin_coords - end_coords)
+                          << std::endl;
+                if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
                     state = SLEEEP;
                     end_coords = base + getOffset();
                 }
@@ -64,6 +76,16 @@ struct Tentacle {
 
     glm::vec2 getOffset() {
         return float(BASIC_LENGTH) * glm::vec2(glm::cos(angle), glm::sin(angle));
+    }
+
+
+    float getDynamicAngle() {
+        auto vec = glm::normalize(end_coords - begin_coords);
+        return std::atan2(vec.y, vec.x);
+    }
+
+    void logvec2(const char *name, glm::vec2 vec) {
+        std::cout << name << " " << vec.x << " " << vec.y << std::endl;
     }
 };
 
@@ -96,9 +118,10 @@ class Player {
     GLint u_FrameTime;
     GLint u_Time;
 
-    const int FRAMECOUNT=7;
-    const float FRAMELENGTH=0.3;
+    const int FRAMECOUNT = 7;
+    const float FRAMELENGTH = 0.3;
     float elapsed = 0;
+
     glm::vec2 translateToGameCoords(glm::vec2 coords);
 
     glm::vec2 translateToGameCoords(float x, float y);

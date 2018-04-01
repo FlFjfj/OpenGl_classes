@@ -60,10 +60,10 @@ void Player::update(float delta) {
     }
 
     auto r = coords - cam->position;
+    float maxsize = World::PART_SIZE * World::WORLD_SIZE;
     if (glm::length(r) > CAMRAD) {
         auto newpos = cam->position + glm::normalize(r) * (glm::length(r) - float(CAMRAD));
-        float maxsize = World::PART_SIZE * World::WORLD_SIZE;
-        if (World::WORLD_WIDTH / 2 - maxsize / 2 < newpos.x && newpos.x < maxsize / 2 - World::WORLD_WIDTH / 2) {
+        if (World::WORLD_WIDTH / 2 - maxsize / 2 < newpos.x && newpoaaaaaad< maxsize / 2 - World::WORLD_WIDTH / 2) {
             cam->position.x = newpos.x;
         }
 
@@ -72,6 +72,21 @@ void Player::update(float delta) {
         }
     }
 
+    if(coords.x < -maxsize/2) {
+        coords.x = -maxsize/2;
+    }
+
+    if(coords.x > maxsize/2) {
+        coords.x = maxsize/2;
+    }
+
+    if(coords.y < -maxsize/2) {
+        coords.y = -maxsize/2;
+    }
+
+    if(coords.y > maxsize/2) {
+        coords.y = maxsize/2;
+    }
     while (controller->hasEvent()) {
         auto e = controller->getEvent();
         auto target = translateToGameCoords(e.data.delta[0], e.data.delta[1]);

@@ -12,6 +12,7 @@
 #include "../World.h"
 #include "../player/Player.h"
 #include "../GlUtils/BitmapFont.h"
+#include "../environment/Lizard.h"
 
 namespace fjfj {
 

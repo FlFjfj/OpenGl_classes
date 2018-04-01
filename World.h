@@ -34,7 +34,7 @@ public:
     GLint proj_loc;
     GLint model_loc;
 
-    std::vector<StaticObject*> map;
+    std::vector<GameObject*> map;
 
 
     static const int WORLD_SIZE = 30;

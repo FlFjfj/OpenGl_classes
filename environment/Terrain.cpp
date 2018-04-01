@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-StaticObject::StaticObject(Texture *tex, float x, float y) : tex(tex), x(x), y(y) {}
-
 Shader *Terrain::TerrainShader = nullptr;
 GLint Terrain::u_ModelTrans = 0;
 GLint Terrain::u_ProjTrans = 0;
@@ -16,7 +14,7 @@ GLint Terrain::u_FrameCount = 0;
 GLint Terrain::u_FrameTime = 0;
 GLint Terrain::u_Time = 0;
 
-Terrain::Terrain(Texture *tex, float x, float y, double (*gen)()) : StaticObject(tex, x, y) {
+Terrain::Terrain(Texture *tex, float x, float y, double (*gen)()) : GameObject(tex, x, y) {
     deltaTime = (float) gen();
     deltaSpeed = (float) gen() / 4;
 }
@@ -41,7 +39,7 @@ GLint Exit::u_FrameTime = 0;
 GLint Exit::u_Time = 0;
 
 
-Exit::Exit(Texture *tex, float x, float y, double (*gen)()) : StaticObject(tex, x, y) {
+Exit::Exit(Texture *tex, float x, float y, double (*gen)()) : GameObject(tex, x, y) {
     deltaTime = (float) gen();
     deltaSpeed = (float) gen() / 4;
 }

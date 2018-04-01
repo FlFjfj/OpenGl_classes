@@ -14,7 +14,7 @@
 #include <ctime>
 
 Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam,
-               std::vector<StaticObject *> *map)
+               std::vector<GameObject *> *map)
         : controller(controller),
           batch(batch), cam(cam), map(map) {
     head = new Texture("texture/head.png");
@@ -74,9 +74,9 @@ void Player::update(float delta, float elapsed) {
         coords -= h_offset;
     }
 
-    if(controller->unconnectAll()) {
+    if (controller->unconnectAll()) {
         for (auto &tentacle : tentacles) {
-            if(tentacle.state == CONNECTED) {
+            if (tentacle.state == CONNECTED) {
                 tentacle.returnEnd();
             }
         }
@@ -164,14 +164,14 @@ void Player::update(float delta, float elapsed) {
                     speed += glm::normalize(coords - tentacle.end_coords) * 300.0f;
                     tentacle.returnEnd();
                 } else {
-                   // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;
+                    // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;
                     tentacle.connectEnd();
                 }
             }
         }
 
-        if(tentacle.state == CONNECTED) {
-            speed -= glm::normalize(coords - tentacle.end_coords)*1000.00f*delta;
+        if (tentacle.state == CONNECTED) {
+            speed -= glm::normalize(coords - tentacle.end_coords) * 1000.00f * delta;
         }
 
         tentacle.update(delta, coords);
@@ -201,17 +201,11 @@ void Player::render(float elapsed) {
 
     light_shader->Use();
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
-    auto vec= glm::normalize(speed);
-    float angle = std::atan2(speed.y,speed.x) - PI/2;
+    auto vec = glm::normalize(speed);
+    float angle = std::atan2(speed.y, speed.x) - PI / 2;
     batch->draw(*head, model_loc, coords.x, coords.y, HEAD_WIDTH, HEAD_HEIGHT, angle);
 
     glUseProgram(0);
-}
-
-glm::vec2 Player::translateToGameCoords(glm::vec2 coords) {
-    coords.x = coords.x / 2 * cam->getWidth();
-    coords.y = coords.y / 2 * cam->getWidth();
-    coords += cam->getPosition();
 }
 
 glm::vec2 Player::translateToGameCoords(float x, float y) {
@@ -222,7 +216,7 @@ glm::vec2 Player::translateToGameCoords(float x, float y) {
     return coords;
 }
 
-StaticObject *Player::getCollision(glm::vec2 coords) {
+GameObject *Player::getCollision(glm::vec2 coords) {
     float COLLISIONBOUND = World::PART_SIZE / 2;
     for (auto el : *map) {
         glm::vec2 objc = {el->x, el->y};

@@ -104,10 +104,6 @@ struct Tentacle {
         }
     }
 
-    void collide(StaticObject *obj) {
-
-    }
-
     glm::vec2 getOffset() {
         return float(BASIC_LENGTH) * glm::vec2(glm::cos(angle), glm::sin(angle));
     }
@@ -117,15 +113,10 @@ struct Tentacle {
         auto vec = glm::normalize(end_coords - begin_coords);
         return std::atan2(vec.y, vec.x);
     }
-
-    static void logvec2(const char *name, glm::vec2 vec) {
-        std::cout << name << " " << vec.x << " " << vec.y << std::endl;
-    }
 };
 
 class Player {
     const static uint32_t NTENTACLES = 8;
-    const static uint32_t TENTACLE_OFFSET = 30;
     const static uint32_t HEAD_WIDTH = 100;
     const static uint32_t HEAD_HEIGHT = 100;
     const static uint32_t CAMRAD = 300;
@@ -158,22 +149,20 @@ class Player {
     const float FRAMELENGTH = 0.3;
     //float elapsed = 0;
 
-    std::vector<StaticObject *> *map;
-
-    glm::vec2 translateToGameCoords(glm::vec2 coords);
+    std::vector<GameObject *> *map;
 
     glm::vec2 translateToGameCoords(float x, float y);
 
-    glm::vec2 getTentacleOffset(float angle);
-
 public:
-    Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam, std::vector<StaticObject *> *map);
+    Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam, std::vector<GameObject *> *map);
 
     void update(float delta, float elapsed);
 
     void render(float elapsed);
 
-    StaticObject *getCollision(glm::vec2 coords);
+    GameObject *getCollision(glm::vec2 coords);
+
+    friend class Lizard;
 };
 
 

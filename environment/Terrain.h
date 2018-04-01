@@ -9,24 +9,11 @@
 #include "../GlUtils/Shader.h"
 #include "../GlUtils/SpriteBatch.h"
 #include "../GlUtils/OrthographicCamera.h"
+#include "GameObject.h"
 
 using namespace fjfj;
 
-class StaticObject {
-public:
-    Texture *tex;
-    float x, y;
-
-    explicit StaticObject(Texture *tex, float x, float y);
-
-    virtual void update(float delta) = 0;
-
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) = 0;
-
-    virtual int getType() = 0;
-};
-
-class Terrain : public StaticObject {
+class Terrain : public GameObject {
     float deltaTime;
     float deltaSpeed;
 public:
@@ -49,7 +36,7 @@ public:
     const float FRAMELENGTH = 0.7;
 };
 
-class Exit : public StaticObject {
+class Exit : public GameObject {
     float deltaTime;
     float deltaSpeed;
 public:

@@ -28,15 +28,15 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
         auto &tentacle = tentacles[i];
         tentacle.angle = 0.25f * i * PI;
         tentacle.begin_coords = {0, 0};
-        tentacle.end_coords = getTentacleOffset(tentacle.angle);
+        tentacle.end_coords = {0,0};
         tentacle.speed = 0;
         tentacle.state = SLEEEP;
 
     }
 
     coords = {0, 0};
-    vertical_speed = {0, 100};
-    horizontal_speed = {100, 0};
+    vertical_speed = {0, 300};
+    horizontal_speed = {300, 0};
 }
 
 void Player::update(float delta) {
@@ -57,6 +57,12 @@ void Player::update(float delta) {
 
     if (controller->moveLeft()) {
         coords -= h_offset;
+    }
+
+    auto r = coords - cam->position;
+    std::cout << glm::length(r) << std::endl;
+    if(glm::length(r) > CAMRAD ) {
+        cam->position += glm::normalize(r) * (glm::length(r) - float(CAMRAD));
     }
 
     while (controller->hasEvent()) {
@@ -125,10 +131,6 @@ glm::vec2 Player::translateToGameCoords(float x, float y) {
     coords.y = y / 2 * cam->getHeight();
     coords += cam->getPosition();
     return coords;
-}
-
-glm::vec2 Player::getTentacleOffset(float angle) {
-    return float(TENTACLE_OFFSET) * glm::vec2(glm::cos(angle), glm::sin(angle));
 }
 
 void *overlaps(glm::vec2 coords) {

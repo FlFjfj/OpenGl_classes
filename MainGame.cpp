@@ -22,8 +22,9 @@ namespace fjfj {
 
     float elapsed = 0;
 
-    const int WORLD_WIDTH = 800;
-    const int WORLD_HEIGHT = 600;
+
+    const int WORLD_WIDTH = 1440;
+    const int WORLD_HEIGHT = 920;
 
     void MainGame::init(GLFWwindow* window) {
         glEnable(GL_MULTISAMPLE);

@@ -10,7 +10,8 @@
 #include "../GlUtils/Mesh.h"
 #include "../GlUtils/Texture.h"
 #include "PlayerController.h"
-#include "../GlUtils/ahader.h"
+#include "../GlUtils/SpriteBatch.h"
+#include "../GlUtils/Shader.h"
 #include "../GlUtils/OrthographicCamera.h"
 #include <cmath>
 
@@ -28,12 +29,12 @@ struct Tentacle {
     bool push;
     glm::vec2 target;
     float speed;
-    const float BASIC_ACC = -1000;
-    const float BASIC_SPEED = 1000;
+    const float BASIC_ACC = -3000;
+    const float BASIC_SPEED = 2000;
     const float BASIC_LENGTH = 100;
 
     void makeMove(glm::vec2 target) {
-        this->target = target;
+        this->target = glm::normalize(target - end_coords);
         state = MOVE;
         speed = BASIC_SPEED;
         push = false;
@@ -49,14 +50,12 @@ struct Tentacle {
             case MOVE:
                 begin_coords = base;
                 speed += BASIC_ACC * delta;
-                logvec2("before", end_coords);
-                if(speed > 0) {
-                    end_coords += glm::normalize(target - end_coords) * delta * speed;
+                if (speed > 0) {
+                    end_coords += target * delta * speed;
                 } else {
-                    end_coords += glm::normalize(end_coords - begin_coords ) * delta * speed;
+                    end_coords += glm::normalize(end_coords - begin_coords) * delta * speed;
                 }
 
-                logvec2("after ", end_coords);
                 std::cout << "speed "
                           << speed
                           << " end len "
@@ -94,8 +93,7 @@ class Player {
     const static uint32_t TENTACLE_OFFSET = 30;
     const static uint32_t HEAD_WIDTH = 100;
     const static uint32_t HEAD_HEIGHT = 100;
-    const static uint32_t TENTACLE_WIDTH = 100;
-    const static uint32_t TENTACLE_HEIGHT = 50;
+    const static uint32_t CAMRAD = 300;
 
     Texture *head;
     Texture *tentacle_tex;

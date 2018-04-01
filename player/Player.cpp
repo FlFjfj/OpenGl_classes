@@ -60,9 +60,8 @@ void Player::update(float delta) {
     }
 
     auto r = coords - cam->position;
-    std::cout << glm::length(r) << std::endl;
     if(glm::length(r) > CAMRAD ) {
-        cam->position += glm::normalize(r) * (glm::length(r) - float(CAMRAD));
+        auto newpos = cam->position + glm::normalize(r) * (glm::length(r) - float(CAMRAD));
     }
 
     while (controller->hasEvent()) {
@@ -83,7 +82,6 @@ void Player::update(float delta) {
 
         if (bestIndex != -1) {
             auto &tentacle = tentacles[bestIndex];
-            std::cout << "index " << bestIndex << "target x " << target.x << " y " << target.y << std::endl;
             tentacle.makeMove(target);
         }
     }

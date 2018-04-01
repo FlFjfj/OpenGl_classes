@@ -56,11 +56,6 @@ struct Tentacle {
                     end_coords += glm::normalize(end_coords - begin_coords) * delta * speed;
                 }
 
-                std::cout << "speed "
-                          << speed
-                          << " end len "
-                          << glm::length(begin_coords - end_coords)
-                          << std::endl;
                 if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
                     state = SLEEEP;
                     end_coords = base + getOffset();

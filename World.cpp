@@ -14,17 +14,27 @@
 
 #include "GlUtils/MeshLoader.h"
 
+std::mt19937 gen(unsigned(std::time(0)));
+std::uniform_real_distribution<> dist(0, 1);
+
+double genNumber() {
+    return dist(gen);
+}
+
 World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/background.png"), batch(batch),
                                                             cam(cam),
                                                             back_shader("shader/back.vert", "shader/back.frag") {
     model_loc = glGetUniformLocation(back_shader.Program, "u_ModelTrans");
     proj_loc = glGetUniformLocation(back_shader.Program, "u_ProjTrans");
 
-    Terrain::TerrainShader = new Shader("shader/light.vert", "shader/light.frag");
-    Terrain::model_loc = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ModelTrans");
-    Terrain::proj_loc = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ProjTrans");
+    Terrain::TerrainShader = new Shader("shader/StaticObject.vert", "shader/StaticObject.frag");
+    Terrain::u_ModelTrans = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ModelTrans");
+    Terrain::u_ProjTrans = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ProjTrans");
+    Terrain::u_FrameCount = glGetUniformLocation(Terrain::TerrainShader->Program, "u_FrameCount");
+    Terrain::u_FrameTime = glGetUniformLocation(Terrain::TerrainShader->Program, "u_FrameTime");
+    Terrain::u_Time = glGetUniformLocation(Terrain::TerrainShader->Program, "u_Time");
 
-    Exit::exitShader = new Shader("shader/animated.vert", "shader/animated.frag");
+    Exit::exitShader = new Shader("shader/StaticObject.vert", "shader/StaticObject.frag");
     Exit::u_ModelTrans = glGetUniformLocation(Exit::exitShader->Program, "u_ModelTrans");
     Exit::u_ProjTrans = glGetUniformLocation(Exit::exitShader->Program, "u_ProjTrans");
     Exit::u_FrameCount = glGetUniformLocation(Exit::exitShader->Program, "u_FrameCount");
@@ -34,19 +44,15 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
     Texture *terrainTex = new Texture("texture/corall.png");
     Texture *exitTex = new Texture("texture/exit.png");
 
-    std::random_device device;
-    std::mt19937 gen(unsigned(std::time(0)));
-    std::uniform_real_distribution<> dist(0, 1);
-
     map = new StaticObject **[this->WORLD_SIZE];
     for (int i = 0; i < this->WORLD_SIZE; i++) {
         map[i] = new StaticObject *[this->WORLD_SIZE]();
         for (int j = 0; j < this->WORLD_SIZE; j++) {
-            double val = dist(gen);
+            double val = genNumber();
             if (val <= this->TERRAIN_CHANCE && i > 0 & i < World::WORLD_SIZE - 1 && j > 0 & j < World::WORLD_SIZE - 1 &&
                 i != World::WORLD_SIZE / 2 && i != World::WORLD_SIZE / 2 + 1 && j != World::WORLD_SIZE / 2 &&
                 j != World::WORLD_SIZE / 2 + 1) {
-                map[i][j] = new Terrain(terrainTex);
+                map[i][j] = new Terrain(terrainTex, genNumber);
                 continue;
             }
 
@@ -54,7 +60,7 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
                 j > 0 & j < World::WORLD_SIZE - 1 &&
                 i != World::WORLD_SIZE / 2 && i != World::WORLD_SIZE / 2 + 1 && j != World::WORLD_SIZE / 2 &&
                 j != World::WORLD_SIZE / 2 + 1) {
-                map[i][j] = new Exit(exitTex);
+                map[i][j] = new Exit(exitTex, genNumber);
                 continue;
             }
 

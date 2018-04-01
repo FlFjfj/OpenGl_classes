@@ -16,7 +16,7 @@ class StaticObject {
 public:
     Texture *tex;
 
-    StaticObject(Texture *tex);
+    explicit StaticObject(Texture *tex);
 
     virtual void update(float delta) = 0;
 
@@ -24,26 +24,35 @@ public:
 };
 
 class Terrain : public StaticObject {
-
+    float deltaTime;
+    float deltaSpeed;
 public:
-    Terrain(Texture *tex);
+    explicit Terrain(Texture *tex, double (*gen)());
 
-    virtual void update(float delta);
+    void update(float delta) override;
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y);
+    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) override;
 
     static Shader *TerrainShader;
-    static GLint model_loc;
-    static GLint proj_loc;
+    static GLint u_ModelTrans;
+    static GLint u_ProjTrans;
+    static GLint u_FrameCount;
+    static GLint u_FrameTime;
+    static GLint u_Time;
+
+    const int FRAMECOUNT = 3;
+    const float FRAMELENGTH = 0.7 ;
 };
 
 class Exit : public StaticObject {
+    float deltaTime;
+    float deltaSpeed;
 public:
-    Exit(Texture *tex);
+    explicit Exit(Texture *tex, double (*gen)());
 
-    virtual void update(float delta);
+    void update(float delta) override;
 
-    virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y);
+    void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed, int x, int y) override;
 
     static Shader *exitShader;
     static GLint u_ModelTrans;

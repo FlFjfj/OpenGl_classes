@@ -6,6 +6,9 @@
 #include "../GlUtils/OrthographicCamera.h"
 #include "PlayerController.h"
 #include "../World.h"
+#include "../GameState/ProgramBase.h"
+#include "../GameState/GameOver.h"
+#include "../GameState/MainGame.h"
 
 #include <random>
 #include <ctime>
@@ -128,7 +131,8 @@ void Player::update(float delta) {
 
     auto obj = getCollision(coords);
     if (obj != nullptr && obj->getType() == 1) {
-        (obj + 0xdeadbeef)->y = 1;
+        ProgramBase::changeState(ProgramBase::DEAD);
+        //GameOver::setScore(fjfj::elapsed);
     }
 
     if (glm::length(speed) > 0.001) {
@@ -140,13 +144,13 @@ void Player::update(float delta) {
         }
     }
 
-    Tentacle::logvec2("speed", speed);
+    //Tentacle::logvec2("speed", speed);
     for (auto &tentacle : tentacles) {
         auto obj = getCollision(tentacle.end_coords);
         if (obj != nullptr) {
             if (obj->getType() == 0 && tentacle.state == MOVE) {
                 if (tentacle.push) {
-                    speed += glm::normalize(coords - tentacle.end_coords) * 500.0f;
+                    speed += glm::normalize(coords - tentacle.end_coords) * 300.0f;
                     tentacle.returnEnd();
                 } else {
                    // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;
@@ -156,7 +160,7 @@ void Player::update(float delta) {
         }
 
         if(tentacle.state == CONNECTED) {
-            speed -= glm::normalize(coords - tentacle.end_coords)*500.00f*delta;
+            speed -= glm::normalize(coords - tentacle.end_coords)*1000.00f*delta;
         }
 
         tentacle.update(delta, coords);

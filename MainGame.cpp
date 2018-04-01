@@ -52,7 +52,7 @@ namespace fjfj {
         glClear(GL_COLOR_BUFFER_BIT);
 
         world->render(batch, cam, elapsed);
-        player->render();
+        player->render(elapsed);
 
     }
 

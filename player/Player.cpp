@@ -13,7 +13,7 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     head = new Texture("texture/head.png");
     tentacle_tex = new Texture("texture/tenta1.png");
     light_shader = new Shader("shader/light.vert", "shader/light.frag");
-    tentacle_shader = new Shader("shader/animated.vert", "shader/animated.frag");
+    tentacle_shader = new Shader("shader/tenta.vert", "shader/tenta.frag");
     model_loc = glGetUniformLocation(light_shader->Program, "u_ModelTrans");
     proj_loc = glGetUniformLocation(light_shader->Program, "u_ProjTrans");
 
@@ -40,7 +40,7 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
 }
 
 void Player::update(float delta) {
-    elapsed += delta;
+   // elapsed += delta;
     auto v_offset = delta * vertical_speed;
     auto h_offset = delta * horizontal_speed;
     if (controller->moveBottom()) {
@@ -63,7 +63,7 @@ void Player::update(float delta) {
     float maxsize = World::PART_SIZE * World::WORLD_SIZE;
     if (glm::length(r) > CAMRAD) {
         auto newpos = cam->position + glm::normalize(r) * (glm::length(r) - float(CAMRAD));
-        if (World::WORLD_WIDTH / 2 - maxsize / 2 < newpos.x && newpoaaaaaad< maxsize / 2 - World::WORLD_WIDTH / 2) {
+        if (World::WORLD_WIDTH / 2 - maxsize / 2 < newpos.x && newpos.x < maxsize / 2 - World::WORLD_WIDTH / 2) {
             cam->position.x = newpos.x;
         }
 
@@ -72,20 +72,20 @@ void Player::update(float delta) {
         }
     }
 
-    if(coords.x < -maxsize/2) {
-        coords.x = -maxsize/2;
+    if (coords.x < -maxsize / 2) {
+        coords.x = -maxsize / 2;
     }
 
-    if(coords.x > maxsize/2) {
-        coords.x = maxsize/2;
+    if (coords.x > maxsize / 2) {
+        coords.x = maxsize / 2;
     }
 
-    if(coords.y < -maxsize/2) {
-        coords.y = -maxsize/2;
+    if (coords.y < -maxsize / 2) {
+        coords.y = -maxsize / 2;
     }
 
-    if(coords.y > maxsize/2) {
-        coords.y = maxsize/2;
+    if (coords.y > maxsize / 2) {
+        coords.y = maxsize / 2;
     }
     while (controller->hasEvent()) {
         auto e = controller->getEvent();
@@ -114,7 +114,7 @@ void Player::update(float delta) {
     }
 }
 
-void Player::render() {
+void Player::render(float elapsed) {
     float PI = glm::acos(0) * 2;
     float correcter = PI / 3;
 

@@ -113,7 +113,7 @@ class Player {
 
     const int FRAMECOUNT = 7;
     const float FRAMELENGTH = 0.3;
-    float elapsed = 0;
+    //float elapsed = 0;
 
     glm::vec2 translateToGameCoords(glm::vec2 coords);
 
@@ -126,7 +126,7 @@ public:
 
     void update(float delta);
 
-    void render();
+    void render(float elapsed);
 
     void *overlaps(glm::vec2 coords);
 };

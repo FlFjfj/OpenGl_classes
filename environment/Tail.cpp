@@ -26,6 +26,7 @@ void Tail::update(float delta) {
     auto dist = player->coords - coords;
     if (glm::length(dist) < 100) {
         player->speed += 2.0f*speed;
+        player->unconnectAll();
         for (auto it = map->begin(); it != map->end(); ++it) {
             if (*it == this) {
                 map->erase(it);

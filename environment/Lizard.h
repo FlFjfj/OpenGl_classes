@@ -20,8 +20,8 @@ public:
         READY, PROCESS, RELOAD
     };
 
-    const float WIDTH = 100;
-    const float HEIGHT = 150;
+    const float WIDTH = 150;
+    const float HEIGHT = 200;
     const float MIN_DIST = 300;
     const float MAX_DIST = 400;
     const float ACC = 300;

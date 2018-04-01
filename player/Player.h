@@ -162,6 +162,7 @@ public:
     void render(float elapsed);
 
     GameObject *getCollision(glm::vec2 coords);
+    void unconnectAll();
 
     friend class Lizard;
 };

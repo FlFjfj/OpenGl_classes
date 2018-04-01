@@ -62,7 +62,7 @@ namespace fjfj {
         Lizard::tail = new Texture("texture/tail.png");
         Lizard::slice = new Texture("texture/tailshot.png");
 
-        Lizard::shader = new Shader("shader/animated.vert", "shader/animated.frag");
+        Lizard::shader = new Shader("shader/lizard.vert", "shader/lizard.frag");
 
         Lizard::u_ModelTrans = glGetUniformLocation(Lizard::shader->Program, "u_ModelTrans");
         Lizard::u_ProjTrans = glGetUniformLocation(Lizard::shader->Program, "u_ProjTrans");

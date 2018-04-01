@@ -51,6 +51,14 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     speed = {-1, -1};
 }
 
+void Player::unconnectAll() {
+    for (auto &tentacle : tentacles) {
+        if (tentacle.state == CONNECTED) {
+            tentacle.returnEnd();
+        }
+    }
+}
+
 void Player::update(float delta, float elapsed) {
     //coords += speed*delta;
     //speed -= glm::normalize(speed)*PLAYER_ACC*delta;
@@ -75,11 +83,7 @@ void Player::update(float delta, float elapsed) {
     }
 
     if (controller->unconnectAll()) {
-        for (auto &tentacle : tentacles) {
-            if (tentacle.state == CONNECTED) {
-                tentacle.returnEnd();
-            }
-        }
+        unconnectAll();
     }
 
     auto r = coords - cam->position;

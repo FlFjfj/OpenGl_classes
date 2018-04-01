@@ -50,6 +50,8 @@ public:
     bool moveLeft();
 
     bool moveBottom();
+
+    bool unconnectAll();
 };
 
 

@@ -75,7 +75,7 @@ struct Tentacle {
 
                 break;
 
-            case CONNECTED:
+            case CONNECTED:/*
                 if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
                     state = SLEEEP;
                     end_coords = base + getOffset();
@@ -86,7 +86,7 @@ struct Tentacle {
                     speed = -1;
                     //end_coords = base + getOffset();
                 }
-
+*/
                 break;
 
             case RETURN:

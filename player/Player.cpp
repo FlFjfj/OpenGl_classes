@@ -74,6 +74,14 @@ void Player::update(float delta, float elapsed) {
         coords -= h_offset;
     }
 
+    if(controller->unconnectAll()) {
+        for (auto &tentacle : tentacles) {
+            if(tentacle.state == CONNECTED) {
+                tentacle.returnEnd();
+            }
+        }
+    }
+
     auto r = coords - cam->position;
     float maxsize = World::PART_SIZE * World::WORLD_SIZE;
     if (glm::length(r) > CAMRAD) {
@@ -91,18 +99,22 @@ void Player::update(float delta, float elapsed) {
 
     if (coords.x - delta_stip < -maxsize / 2) {
         coords.x = -maxsize / 2 + delta_stip;
+        speed.x = -speed.x;
     }
 
     if (coords.x + delta_stip > maxsize / 2) {
         coords.x = maxsize / 2 - delta_stip;
+        speed.x = -speed.x;
     }
 
     if (coords.y - delta_stip < -maxsize / 2) {
         coords.y = -maxsize / 2 + delta_stip;
+        speed.y = -speed.y;
     }
 
     if (coords.y + delta_stip > maxsize / 2) {
         coords.y = maxsize / 2 - delta_stip;
+        speed.y = -speed.y;
     }
 
 
@@ -144,7 +156,6 @@ void Player::update(float delta, float elapsed) {
         }
     }
 
-    //Tentacle::logvec2("speed", speed);
     for (auto &tentacle : tentacles) {
         auto obj = getCollision(tentacle.end_coords);
         if (obj != nullptr) {
@@ -190,7 +201,9 @@ void Player::render(float elapsed) {
 
     light_shader->Use();
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
-    batch->draw(*head, model_loc, coords.x, coords.y, HEAD_WIDTH, HEAD_HEIGHT);
+    auto vec= glm::normalize(speed);
+    float angle = std::atan2(speed.y,speed.x) - PI/2;
+    batch->draw(*head, model_loc, coords.x, coords.y, HEAD_WIDTH, HEAD_HEIGHT, angle);
 
     glUseProgram(0);
 }

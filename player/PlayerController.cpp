@@ -70,3 +70,7 @@ bool PlayerController::moveLeft() {
 bool PlayerController::moveBottom() {
     return glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
 }
+
+bool PlayerController::unconnectAll() {
+    return glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+}

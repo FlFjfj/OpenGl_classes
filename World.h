@@ -10,6 +10,7 @@
 #include "GlUtils/OrthographicCamera.h"
 #include "GlUtils/SpriteBatch.h"
 #include "GlUtils/Shader.h"
+#include "environment/Terrain.h"
 
 #include <glm/glm.hpp>
 
@@ -23,6 +24,8 @@ class World {
 
     const int WORLD_SIZE = 50;
     const int PART_SIZE = 50;
+    const float TERRAIN_CHANCE = 0.2;
+    const float EXIT_CHANCE = 0.1;
 
     OrthographicCamera *cam;
     SpriteBatch *batch;
@@ -31,6 +34,8 @@ class World {
     Texture background;
     GLint proj_loc;
     GLint model_loc;
+
+    StaticObject ***map;
 
 public:
     World(SpriteBatch *batch, OrthographicCamera *cam);

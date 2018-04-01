@@ -20,6 +20,8 @@ namespace fjfj {
     World* world;
     Player* player;
 
+    float elapsed = 0;
+
     const int WORLD_WIDTH = 800;
     const int WORLD_HEIGHT = 600;
 
@@ -40,6 +42,7 @@ namespace fjfj {
 
     float time = 0;
     void MainGame::update(float delta) {
+        elapsed += delta;
         cam->update();
         player->update(delta);
         time += delta;

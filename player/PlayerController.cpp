@@ -32,7 +32,7 @@ void PlayerController::mouseClickHandler(GLFWwindow *window, int button, int act
 
         case GLFW_MOUSE_BUTTON_RIGHT:
             if (action == GLFW_RELEASE) {
-                e.type = M_RELEASE_LEFT;
+                e.type = M_RELEASE_RIGHT;
                 qclicks.push(e);
             }
 

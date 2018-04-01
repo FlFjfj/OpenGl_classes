@@ -19,7 +19,7 @@
 using namespace fjfj;
 
 enum TentacleState {
-    SLEEEP, MOVE, CONNECTED
+    SLEEEP, MOVE, RETURN, CONNECTED
 };
 
 struct Tentacle {
@@ -35,18 +35,19 @@ struct Tentacle {
     const float BASIC_SPEED = 2000;
     const float BASIC_LENGTH = 100;
 
-    void makeMove(glm::vec2 target) {
+    void makeMove(glm::vec2 target, bool push) {
         this->target = glm::normalize(target - end_coords);
         state = MOVE;
         speed = BASIC_SPEED;
-        push = false;
+        this->push = push;
     }
 
     void returnEnd() {
         speed = 0;
+        state = RETURN;
     }
 
-    void stopEnd() {
+    void connectEnd() {
         state = CONNECTED;
         speed = 0;
     }
@@ -63,7 +64,8 @@ struct Tentacle {
                 if (speed > 0) {
                     end_coords += target * delta * speed;
                 } else {
-                    end_coords += glm::normalize(end_coords - begin_coords) * delta * speed;
+                    state = RETURN;
+                    break;
                 }
 
                 if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
@@ -74,6 +76,22 @@ struct Tentacle {
                 break;
 
             case CONNECTED:
+                if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
+                    state = SLEEEP;
+                    end_coords = base + getOffset();
+                }
+
+                if (glm::length(begin_coords - end_coords) > 5 * BASIC_LENGTH) {
+                    state = RETURN;
+                    speed = -1;
+                    //end_coords = base + getOffset();
+                }
+
+                break;
+
+            case RETURN:
+                speed += delta * BASIC_ACC;
+                end_coords += glm::normalize(end_coords - begin_coords) * delta * speed;
                 if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
                     state = SLEEEP;
                     end_coords = base + getOffset();
@@ -128,7 +146,7 @@ class Player {
     glm::vec2 vertical_speed;
     glm::vec2 horizontal_speed;
     glm::vec2 speed;
-    const float PLAYER_ACC = -100;
+    const float PLAYER_ACC = 500;
 
     GLint u_ModelTrans;
     GLint u_ProjTrans;

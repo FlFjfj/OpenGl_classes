@@ -45,18 +45,12 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     coords = {0, 0};
     vertical_speed = {0, 300};
     horizontal_speed = {300, 0};
-    speed = {0, 0};
+    speed = {-1, -1};
 }
 
 void Player::update(float delta) {
-    auto newspeedlen = (glm::length(speed) + PLAYER_ACC*delta);
-    if (newspeedlen < 0) {
-        speed = {0, 0};
-    } else if(glm::length(speed) > 0.0003f){
-        speed = glm::normalize(speed) * newspeedlen;
-    }
-
-    coords += speed*delta;
+    //coords += speed*delta;
+    //speed -= glm::normalize(speed)*PLAYER_ACC*delta;
     // elapsed += delta;
 
     auto v_offset = delta * vertical_speed;
@@ -127,33 +121,48 @@ void Player::update(float delta) {
 
         if (bestIndex != -1) {
             auto &tentacle = tentacles[bestIndex];
-            tentacle.makeMove(target);
+            std::cout << (e.type == M_RELEASE_LEFT) << std::endl;
+            tentacle.makeMove(target, e.type == M_RELEASE_LEFT);
         }
     }
 
     auto obj = getCollision(coords);
     if (obj != nullptr && obj->getType() == 1) {
-        //(obj + 0xdeadbeef)->y = 1;
+        (obj + 0xdeadbeef)->y = 1;
     }
 
+    if (glm::length(speed) > 0.001) {
+        float newlen = (glm::length(speed) - PLAYER_ACC * delta);
+        if (newlen < 0) {
+            speed = {0, 0};
+        } else {
+            speed = glm::normalize(speed) * newlen;
+        }
+    }
 
     Tentacle::logvec2("speed", speed);
     for (auto &tentacle : tentacles) {
         auto obj = getCollision(tentacle.end_coords);
         if (obj != nullptr) {
-            if (obj->getType() == 0) {
+            if (obj->getType() == 0 && tentacle.state == MOVE) {
                 if (tentacle.push) {
-                    speed += glm::normalize(coords - tentacle.end_coords) * 600.0f*delta;
+                    speed += glm::normalize(coords - tentacle.end_coords) * 500.0f;
                     tentacle.returnEnd();
                 } else {
-                    speed -= glm::normalize(coords - tentacle.end_coords) * 600.0f*delta;
-                    tentacle.stopEnd();
+                   // speed -= glm::normalize(coords - tentacle.end_coords) * 500.00f;
+                    tentacle.connectEnd();
                 }
             }
         }
 
+        if(tentacle.state == CONNECTED) {
+            speed -= glm::normalize(coords - tentacle.end_coords)*500.00f*delta;
+        }
+
         tentacle.update(delta, coords);
     }
+
+    coords += speed * delta;
 }
 
 void Player::render(float elapsed) {

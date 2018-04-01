@@ -10,9 +10,10 @@
 #include <random>
 #include <ctime>
 
-Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam)
+Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam,
+               std::vector<StaticObject *> *map)
         : controller(controller),
-          batch(batch), cam(cam) {
+          batch(batch), cam(cam), map(map) {
     head = new Texture("texture/head.png");
     tentacle_tex = new Texture *[2];
     tentacle_tex[0] = new Texture("texture/tenta1.png");
@@ -27,7 +28,6 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     u_FrameCount = glGetUniformLocation(tentacle_shader->Program, "u_FrameCount");
     u_FrameTime = glGetUniformLocation(tentacle_shader->Program, "u_FrameTime");
     u_Time = glGetUniformLocation(tentacle_shader->Program, "u_Time");
-
     std::mt19937 gen(unsigned(std::time(0)));
     std::uniform_int_distribution<> dist(0, 1);
 
@@ -45,10 +45,20 @@ Player::Player(PlayerController *controller, SpriteBatch *batch, OrthographicCam
     coords = {0, 0};
     vertical_speed = {0, 300};
     horizontal_speed = {300, 0};
+    speed = {0, 0};
 }
 
 void Player::update(float delta) {
-   // elapsed += delta;
+    auto newspeedlen = (glm::length(speed) + PLAYER_ACC*delta);
+    if (newspeedlen < 0) {
+        speed = {0, 0};
+    } else if(glm::length(speed) > 0.0003f){
+        speed = glm::normalize(speed) * newspeedlen;
+    }
+
+    coords += speed*delta;
+    // elapsed += delta;
+
     auto v_offset = delta * vertical_speed;
     auto h_offset = delta * horizontal_speed;
     if (controller->moveBottom()) {
@@ -97,6 +107,8 @@ void Player::update(float delta) {
     if (coords.y + delta_stip > maxsize / 2) {
         coords.y = maxsize / 2 - delta_stip;
     }
+
+
     while (controller->hasEvent()) {
         auto e = controller->getEvent();
         auto target = translateToGameCoords(e.data.delta[0], e.data.delta[1]);
@@ -119,7 +131,27 @@ void Player::update(float delta) {
         }
     }
 
+    auto obj = getCollision(coords);
+    if (obj != nullptr && obj->getType() == 1) {
+        //(obj + 0xdeadbeef)->y = 1;
+    }
+
+
+    Tentacle::logvec2("speed", speed);
     for (auto &tentacle : tentacles) {
+        auto obj = getCollision(tentacle.end_coords);
+        if (obj != nullptr) {
+            if (obj->getType() == 0) {
+                if (tentacle.push) {
+                    speed += glm::normalize(coords - tentacle.end_coords) * 600.0f*delta;
+                    tentacle.returnEnd();
+                } else {
+                    speed -= glm::normalize(coords - tentacle.end_coords) * 600.0f*delta;
+                    tentacle.stopEnd();
+                }
+            }
+        }
+
         tentacle.update(delta, coords);
     }
 }
@@ -164,6 +196,14 @@ glm::vec2 Player::translateToGameCoords(float x, float y) {
     return coords;
 }
 
-void *overlaps(glm::vec2 coords) {
+StaticObject *Player::getCollision(glm::vec2 coords) {
+    float COLLISIONBOUND = World::PART_SIZE / 2;
+    for (auto el : *map) {
+        glm::vec2 objc = {el->x, el->y};
+        if (glm::length(coords - objc) < COLLISIONBOUND) {
+            return el;
+        }
+    }
+
     return nullptr;
 }

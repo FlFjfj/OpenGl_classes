@@ -13,6 +13,7 @@
 #include "../GlUtils/SpriteBatch.h"
 #include "../GlUtils/Shader.h"
 #include "../GlUtils/OrthographicCamera.h"
+#include "../environment/Terrain.h"
 #include <cmath>
 
 using namespace fjfj;
@@ -41,15 +42,23 @@ struct Tentacle {
         push = false;
     }
 
+    void returnEnd() {
+        speed = 0;
+    }
+
+    void stopEnd() {
+        state = CONNECTED;
+        speed = 0;
+    }
+
     void update(float delta, glm::vec2 base) {
+        begin_coords = base;
         switch (state) {
             case SLEEEP:
-                begin_coords = base;
                 end_coords = begin_coords + getOffset();
                 break;
 
             case MOVE:
-                begin_coords = base;
                 speed += BASIC_ACC * delta;
                 if (speed > 0) {
                     end_coords += target * delta * speed;
@@ -64,9 +73,21 @@ struct Tentacle {
 
                 break;
 
+            case CONNECTED:
+                if (glm::length(begin_coords - end_coords) < BASIC_LENGTH) {
+                    state = SLEEEP;
+                    end_coords = base + getOffset();
+                }
+
+                break;
+
             default:
                 break;
         }
+    }
+
+    void collide(StaticObject *obj) {
+
     }
 
     glm::vec2 getOffset() {
@@ -101,10 +122,13 @@ class Player {
     SpriteBatch *batch;
     OrthographicCamera *cam;
 
+
     glm::vec2 coords;
     Tentacle tentacles[NTENTACLES];
     glm::vec2 vertical_speed;
     glm::vec2 horizontal_speed;
+    glm::vec2 speed;
+    const float PLAYER_ACC = -100;
 
     GLint u_ModelTrans;
     GLint u_ProjTrans;
@@ -116,6 +140,8 @@ class Player {
     const float FRAMELENGTH = 0.3;
     //float elapsed = 0;
 
+    std::vector<StaticObject *> *map;
+
     glm::vec2 translateToGameCoords(glm::vec2 coords);
 
     glm::vec2 translateToGameCoords(float x, float y);
@@ -123,13 +149,13 @@ class Player {
     glm::vec2 getTentacleOffset(float angle);
 
 public:
-    Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam);
+    Player(PlayerController *controller, SpriteBatch *batch, OrthographicCamera *cam, std::vector<StaticObject *> *map);
 
     void update(float delta);
 
     void render(float elapsed);
 
-    void *overlaps(glm::vec2 coords);
+    StaticObject *getCollision(glm::vec2 coords);
 };
 
 

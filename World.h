@@ -22,7 +22,7 @@ using fjfj::OrthographicCamera;
 using fjfj::SpriteBatch;
 
 class World {
-
+public:
     const float TERRAIN_CHANCE = 0.05;
     const float EXIT_CHANCE = 0.03;
 
@@ -36,7 +36,7 @@ class World {
 
     std::vector<StaticObject*> map;
 
-public:
+
     static const int WORLD_SIZE = 30;
     static const int PART_SIZE = 150;
     static const int WORLD_WIDTH = 1440;

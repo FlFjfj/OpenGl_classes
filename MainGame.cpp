@@ -38,7 +38,7 @@ namespace fjfj {
 
         world = new World(batch, cam);
         glfwSetMouseButtonCallback(window, PlayerController::mouseClickHandler);
-        player = new Player(new PlayerController(window), batch, cam);
+        player = new Player(new PlayerController(window), batch, cam, &world->map);
     }
 
     void MainGame::update(float delta) {

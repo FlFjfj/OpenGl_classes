@@ -17,8 +17,8 @@ namespace fjfj {
     SpriteBatch *batch;
     OrthographicCamera *cam;
 
-    World* world;
-    Player* player;
+    World *world;
+    Player *player;
 
     float elapsed = 0;
 
@@ -26,11 +26,11 @@ namespace fjfj {
     const int WORLD_WIDTH = 1440;
     const int WORLD_HEIGHT = 920;
 
-    void MainGame::init(GLFWwindow* window) {
+    void MainGame::init(GLFWwindow *window) {
         glEnable(GL_MULTISAMPLE);
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         batch = new SpriteBatch();
@@ -41,18 +41,17 @@ namespace fjfj {
         player = new Player(new PlayerController(window), batch, cam);
     }
 
-    float time = 0;
     void MainGame::update(float delta) {
         elapsed += delta;
-        cam->update();
+        world->update(delta, elapsed);
         player->update(delta);
-        time += delta;
+        cam->update();
     }
 
     void MainGame::render() {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        world->render();
+        world->render(batch, cam);
         player->render();
 
     }

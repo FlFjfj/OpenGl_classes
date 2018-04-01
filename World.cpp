@@ -20,6 +20,10 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
     model_loc = glGetUniformLocation(back_shader.Program, "u_ModelTrans");
     proj_loc = glGetUniformLocation(back_shader.Program, "u_ProjTrans");
 
+    Terrain::TerrainShader = new Shader("shader/light.vert", "shader/light.frag");
+    model_loc = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ModelTrans");
+    proj_loc = glGetUniformLocation(Terrain::TerrainShader->Program, "u_ProjTrans");
+
     Texture *terrainTex = new Texture("texture/corall.png");
     Texture *exitTex = new Texture("texture/exit.png");
 
@@ -38,7 +42,7 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
             }
 
             if (dist(gen) <= this->TERRAIN_CHANCE + this->EXIT_CHANCE) {
-                map[i][j] = new Exit(terrainTex);
+                map[i][j] = new Exit(exitTex);
                 continue;
             }
 
@@ -47,16 +51,28 @@ World::World(SpriteBatch *batch, OrthographicCamera *cam) : background("texture/
     }
 }
 
-void World::update(float delta) {
-
+void World::update(float delta, float elapsed) {
+    for (int i = 0; i < this->WORLD_SIZE; i++) {
+        for (int j = 0; j < this->WORLD_SIZE; j++) {
+            if (map[i][j] != nullptr) {
+                map[i][j]->update(delta, elapsed);
+            }
+        }
+    }
 }
 
-void World::render() {
-    back_shader.Use();
+void World::render(SpriteBatch *batch, OrthographicCamera *cam) {
+    /*back_shader.Use();
     int size = this->PART_SIZE * this->WORLD_SIZE;
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(cam->proj));
     batch->draw(this->background, this->model_loc, 0, 0, size, size);
-    glUseProgram(0);
+    glUseProgram(0);*/
 
-
+    for (int i = 0; i < World::WORLD_SIZE; i++) {
+        for (int j = 0; j < World::WORLD_SIZE; j++) {
+            if (map[i][j] != nullptr) {
+                map[i][j]->draw(batch, cam, i, j);
+            }
+        }
+    }
 }

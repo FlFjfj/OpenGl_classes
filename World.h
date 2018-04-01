@@ -22,8 +22,6 @@ using fjfj::SpriteBatch;
 
 class World {
 
-    const int WORLD_SIZE = 50;
-    const int PART_SIZE = 50;
     const float TERRAIN_CHANCE = 0.2;
     const float EXIT_CHANCE = 0.1;
 
@@ -38,11 +36,14 @@ class World {
     StaticObject ***map;
 
 public:
+    static const int WORLD_SIZE = 50;
+    static const int PART_SIZE = 50;
+
     World(SpriteBatch *batch, OrthographicCamera *cam);
 
-    void update(float delta);
+    void update(float delta, float elapsed);
 
-    void render();
+    void render(SpriteBatch *batch, OrthographicCamera *cam);
 };
 
 

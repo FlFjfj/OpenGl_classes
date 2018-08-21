@@ -1,6 +1,9 @@
 #version 330 core
 
 uniform sampler2D texture0;
+uniform mat4 u_ModelTrans;
+uniform mat4 u_ProjTrans;
+
 
 in vec2 v_TexCoord;
 

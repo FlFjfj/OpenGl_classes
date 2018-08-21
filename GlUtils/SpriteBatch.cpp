@@ -29,7 +29,7 @@ namespace fjfj {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
         glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
-                glm::scale(glm::translate(glm::mat4(), glm::vec3(x, y, 0)), glm::vec3(width, height, 1))));
+                glm::scale(glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0)), glm::vec3(width, height, 1))));
 
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -40,7 +40,7 @@ namespace fjfj {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
         glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
-                glm::scale(glm::translate(glm::mat4(), glm::vec3(coords, 0)), glm::vec3(width, height, 1))));
+                glm::scale(glm::translate(glm::mat4(1.0), glm::vec3(coords, 0)), glm::vec3(width, height, 1))));
 
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -51,7 +51,7 @@ namespace fjfj {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
         glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
-                glm::scale(glm::rotate(glm::translate(glm::mat4(), glm::vec3(x, y, 0)), angle, glm::vec3(0,0,1)), glm::vec3(width, height, 1))));
+                glm::scale(glm::rotate(glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0)), angle, glm::vec3(0,0,1)), glm::vec3(width, height, 1))));
 
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -62,7 +62,7 @@ namespace fjfj {
 
         glBindTexture(GL_TEXTURE_2D, tex.texture);
         glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(
-                glm::scale(glm::translate(glm::rotate(glm::translate(glm::mat4(), glm::vec3(coords, 0)), angle, glm::vec3(0,0,1)),{height/4, 0,0}), glm::vec3(width, height, 1))));
+                glm::scale(glm::translate(glm::rotate(glm::translate(glm::mat4(1.0), glm::vec3(coords, 0)), angle, glm::vec3(0,0,1)),{height/4, 0,0}), glm::vec3(width, height, 1))));
 
         this->square->draw();
         glBindTexture(GL_TEXTURE_2D, 0);

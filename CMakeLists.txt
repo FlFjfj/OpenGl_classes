@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.6)
 project(GlutGl)
 
-#find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(SOIL CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
-   
+
 set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCE_FILES player/Player.cpp player/Player.h player/PlayerController.h

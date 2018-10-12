@@ -18,17 +18,12 @@ namespace fjfj {
     public:
         float width, height;
         glm::vec2 position;
-
         glm::mat4 proj;
 
         OrthographicCamera(float width, float height);
-
         void update();
-
         float getWidth();
-
         float getHeight();
-
         glm::vec2 getPosition();
     };
 

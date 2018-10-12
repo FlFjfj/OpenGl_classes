@@ -18,11 +18,8 @@ public:
     float x, y;
 
     explicit GameObject(Texture *tex, float x, float y);
-
     virtual void update(float delta) = 0;
-
     virtual void draw(SpriteBatch *batch, OrthographicCamera *cam, float elapsed) = 0;
-
     virtual int getType() = 0;
 };
 
